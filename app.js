@@ -3,6 +3,7 @@ import {identifyLunch,indexRecipe,normalize} from './lunch-catalog.js';
 
 const family = ['Mauro','Cassandra','Francesca','Lorenzo'];
 const days = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
+const dayIcons = ['🌿','☀️','🥕','🍋','⭐','🌼','🧡'];
 const mains = ['pollo','riso','frittata','manzo','pesce','burger','pasta','piadina','ceci','farfalle','pesto','couscous','tacchino','salmone','piselli','zucca','limone','lentiche','cannellini','orata','uova','caprese'];
 const sides = ['verdure','insalata','fagiolini','broccoli','patate','carote','bruschetta'];
 const recipeGroups = [
@@ -171,8 +172,8 @@ const amount = new Intl.NumberFormat('it-IT',{maximumFractionDigits:2});
 const portions = n => n === 1 ? '1 porzione' : n+' porzioni';
 const href = (id,n) => '#ricetta/'+id+'/'+n;
 function meal(id,n,who) {
-  const {name} = recipes[id];
-  return `<div class="meal"><a class="dish" href="${href(id,n)}">${escaped(name)}</a><span class="portions">${who} · ${portions(n)}</span></div>`;
+  const {name,icon} = recipes[id];
+  return `<div class="meal"><a class="dish" href="${href(id,n)}"><span aria-hidden="true">${icon}</span> ${escaped(name)}</a><span class="portions">${who} · ${portions(n)}</span></div>`;
 }
 function dinnerMarkup({dinner,side,portionMix}) {
   const [a,b] = dinnerParts(dinner);
@@ -191,11 +192,11 @@ function lunchButton(index,person) {
   const name = family[person];
   const summary = (state[index].categories?.[person] ?? []).map(key => categoryNames[key]).join(', ');
   const lunchText = value || summary;
-  return `<button class="lunch" data-lunch="${person}" data-day="${index}" aria-label="${lunchText ? 'Modifica' : 'Aggiungi'} pranzo di ${name}, ${days[index]}"><span class="person">${name}</span><span class="lunch-text">${lunchText ? escaped(lunchText) : 'Aggiungi pranzo'}</span><span class="edit" aria-hidden="true">✎</span></button>`;
+  return `<button class="lunch" data-lunch="${person}" data-day="${index}" aria-label="${lunchText ? 'Modifica' : 'Aggiungi'} pranzo di ${name}, ${days[index]}"><span aria-hidden="true">${person ? '🌸' : '🌞'}</span><span class="person">${name}</span><span class="lunch-text">${lunchText ? escaped(lunchText) : 'Aggiungi pranzo'}</span><span class="edit" aria-hidden="true">✎</span></button>`;
 }
 function renderWeek() {
   main.innerHTML = `<div class="section-head"><h1 class="section-title">Menù della settimana</h1></div>
-  <div class="week">${days.map((day,i) => `<article class="day" id="day-${i}"><div class="day-head"><h3>${day}</h3>${today===i ? '<span class="current">Oggi</span>' : ''}</div><div class="lunches">${lunchButton(i,0)}${lunchButton(i,1)}</div><div class="dinner"><div class="dinner-content"><div class="meals">${dinnerMarkup(state[i])}</div></div><div class="dinner-actions"><button class="change" data-change="${i}" aria-label="Altra proposta, ${day}"><span aria-hidden="true">⟳</span> Altra proposta</button></div></div></article>`).join('')}</div>`;
+  <div class="week">${days.map((day,i) => `<article class="day" id="day-${i}"><div class="day-head"><span class="day-mark" aria-hidden="true">${dayIcons[i]}</span><h3>${day}</h3>${today===i ? '<span class="current">Oggi</span>' : ''}</div><div class="lunches">${lunchButton(i,0)}${lunchButton(i,1)}</div><div class="dinner"><div class="dinner-content"><div class="dinner-label">Cena proposta</div><div class="meals">${dinnerMarkup(state[i])}</div></div><div class="dinner-actions"><button class="change" data-change="${i}" aria-label="Altra proposta, ${day}"><span aria-hidden="true">⟳</span> Altra proposta</button></div></div></article>`).join('')}</div>`;
 }
 function ingredients(recipe,n) {
   return '<ul>'+recipe.ingredients.map(([name,quantity,unit]) => `<li>${escaped(name)} · ${amount.format(quantity*n/4)}${unit ? ' '+escaped(unit) : ''}</li>`).join('')+'</ul>';
@@ -206,7 +207,7 @@ function renderRoute() {
   if (location.hash === '#ricettario') {
     main.innerHTML = `<div class="view-head"><a class="outline back" href="#">Menù della settimana</a><div class="book-title"><h1>Ricettario</h1><button class="primary" data-new-recipe>＋ Nuova ricetta</button></div></div>${recipeGroups.map(([title,keys]) => `<section class="recipe-group"><h2>${title}</h2><div class="recipes">${keys.map(key => {
       const recipe = recipes[key];
-      return `<article class="recipe"><h3>${escaped(recipe.name)}</h3><p>4 persone</p>${ingredients(recipe,4)}<a href="${href(key,4)}">Leggi la preparazione</a></article>`;
+      return `<article class="recipe"><h3><span aria-hidden="true">${recipe.icon}</span> ${escaped(recipe.name)}</h3><p>4 persone</p>${ingredients(recipe,4)}<a href="${href(key,4)}">Leggi la preparazione</a></article>`;
     }).join('')}</div></section>`).join('')}`;
     scrollTo(0,0);
   } else if (location.hash.startsWith('#ricetta/') && Object.hasOwn(recipes,id)) {
@@ -277,36 +278,10 @@ document.querySelector('#lunchForm').addEventListener('submit',event => {
   }
   dialog.close();
 });
-for (const modal of [document.querySelector('#installHelp'),recipeEditor]) {
-  modal.querySelectorAll('[data-close]').forEach(button => { button.onclick = () => modal.close(); });
-}
+recipeEditor.querySelectorAll('[data-close]').forEach(button => { button.onclick = () => recipeEditor.close(); });
 const recipeType = document.querySelector('#recipeType');
 const sideChoice = document.querySelector('#sideChoice');
 recipeType.onchange = () => { sideChoice.hidden = recipeType.value !== 'other'; };
-const install = document.querySelector('#install');
-let installPrompt;
-const inStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-install.hidden = inStandalone();
-window.addEventListener('beforeinstallprompt',event=>{
-  event.preventDefault();
-  installPrompt=event;
-});
-window.addEventListener('appinstalled',()=>{ install.hidden=true; installPrompt=null; });
-install.onclick = async () => {
-  if (installPrompt) {
-    const prompt = installPrompt;
-    installPrompt = null;
-    await prompt.prompt();
-    return;
-  }
-  const apple = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
-  document.querySelector('#installInstructions').textContent = apple
-    ? 'Apri Maurapp in Safari. Tocca Condividi e poi Aggiungi alla schermata Home.'
-    : /Android/i.test(navigator.userAgent)
-      ? 'Apri Maurapp in Chrome. Nel menu ⋮ scegli Installa app o Aggiungi alla schermata Home.'
-      : 'In Chrome o Edge, cerca l’icona di installazione nella barra degli indirizzi oppure apri il menu del browser e scegli Installa Maurapp.';
-  document.querySelector('#installHelp').showModal();
-};
 function addIngredient() {
   const row = document.createElement('div');
   row.className = 'ingredient-row';
