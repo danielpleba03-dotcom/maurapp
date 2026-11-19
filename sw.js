@@ -1,9 +1,21 @@
-const cacheName = 'maurapp-static-v5';
-const assets = ['./','./style.css','./app.js','./recipes.js','./lunch-catalog.js','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
-self.addEventListener('install',event => event.waitUntil(caches.open(cacheName).then(cache => cache.addAll(assets)).then(()=>self.skipWaiting())));
-self.addEventListener('activate',event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('maurapp-static-') && key !== cacheName).map(key => caches.delete(key)))).then(()=>self.clients.claim())));
+const cacheName = 'maurapp-static-v6';
+const assets = ['./','./style.css?v=6','./app.js?v=6','./recipes.js?v=6','./lunch-catalog.js?v=6','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
+
+self.addEventListener('install',event => {
+  event.waitUntil(caches.open(cacheName)
+    .then(cache => cache.addAll(assets.map(url => new Request(url,{cache:'reload'}))))
+    .then(() => self.skipWaiting()));
+});
+self.addEventListener('activate',event => {
+  event.waitUntil(caches.keys()
+    .then(keys => Promise.all(keys.filter(key => key.startsWith('maurapp-static-') && key !== cacheName).map(key => caches.delete(key))))
+    .then(() => self.clients.claim()));
+});
 self.addEventListener('fetch',event => {
   const request = event.request;
-  if(request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return;
-  event.respondWith(fetch(request).catch(async () => (await caches.match(request)) || (request.mode === 'navigate' ? await caches.match('./') : Response.error())));
+  if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return;
+  event.respondWith(fetch(request).catch(async () => {
+    const cache = await caches.open(cacheName);
+    return (await cache.match(request)) || (request.mode === 'navigate' ? await cache.match('./') : Response.error());
+  }));
 });

@@ -1,5 +1,5 @@
-import {recipes} from './recipes.js';
-import {identifyLunch,indexRecipe,normalize} from './lunch-catalog.js';
+import {recipes} from './recipes.js?v=6';
+import {identifyLunch,indexRecipe,normalize} from './lunch-catalog.js?v=6';
 
 const family = ['Mauro','Cassandra','Francesca','Lorenzo'];
 const days = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
