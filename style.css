@@ -26,3 +26,11 @@ html,button,a{touch-action:manipulation}
  .recipe-filters{gap:5px}
  .recipe-filters button{font-size:.83rem;padding-inline:9px}
 }
+.week-dates{font-size:.86rem;color:var(--muted);margin-top:2px}
+.history-actions{display:flex;align-items:center;gap:6px}
+.calendar-button{display:grid;place-items:center;min-width:44px;padding:7px}
+.history-search{display:flex;gap:7px}.history-search input{min-width:0;flex:1}
+#historyMessage,#recentWeeks>p{font-size:.875rem;color:var(--muted);margin-top:8px}
+#recentWeeks{display:grid;gap:6px;margin-top:12px}#recentWeeks button{text-align:left}
+.archived-lunch{grid-template-columns:84px minmax(0,1fr);cursor:default}.archived-lunch:hover{background:#faf6ed}
+@media(max-width:660px){.history-actions button[data-current-week]{font-size:.8rem;padding-inline:7px}.day .archived-lunch{grid-template-columns:84px minmax(0,1fr)}}

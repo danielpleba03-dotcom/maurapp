@@ -5,10 +5,10 @@
 <meta name="theme-color" content="#fffaf2"><meta name="description" content="Organizza le cene di Mauro, Francesca, Lorenzo e Cassandra.">
 <title>Maurapp · Le cene di famiglia</title>
 <link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="./icon-192.png">
-<link rel="stylesheet" href="./style.css?v=8"><script type="module">
-import('./app.js?v=8').catch(error => {
+<link rel="stylesheet" href="./style.css?v=9"><script type="module">
+import('./app.js?v=9').catch(error => {
   console.error(error);
-  document.querySelector('#main').innerHTML = '<p role="alert">Impossibile caricare il menù. <a href="./?v=8">Riprova</a>.</p>';
+  document.querySelector('#main').innerHTML = '<p role="alert">Impossibile caricare il menù. <a href="./?v=9">Riprova</a>.</p>';
 });
 </script>
 </head>
@@ -22,6 +22,9 @@ import('./app.js?v=8').catch(error => {
 <fieldset class="ingredients-editor"><legend>Ingredienti</legend><div id="ingredientRows"></div><button type="button" class="outline" id="addIngredient">Aggiungi ingrediente</button></fieldset>
 <label for="recipePrep">Preparazione</label><textarea id="recipePrep" rows="3" maxlength="4000" required></textarea><label for="recipeSource">Link alla fonte (facoltativo)</label><input id="recipeSource" type="url" placeholder="https://…"><p id="recipeError" role="alert"></p>
 <div class="dialog-actions"><button type="button" class="outline" data-close>Annulla</button><button type="submit" class="primary">Salva ricetta</button></div></form></dialog>
+<dialog id="weekHistory"><div class="dialog-top"><h2>Settimane passate</h2><button class="close" type="button" aria-label="Chiudi">×</button></div>
+<form id="historyForm"><label for="historyDate">Data nella settimana da cercare</label><div class="history-search"><input type="date" id="historyDate" required><button class="primary" type="submit">Apri</button></div><p id="historyMessage" role="status"></p></form>
+<div id="recentWeeks"></div></dialog>
 <p id="announce" class="sr" role="status"></p>
 </body>
 </html>

@@ -1,5 +1,5 @@
-import {recipes} from './recipes.js?v=8';
-import {identifyLunch,indexRecipe,normalize} from './lunch-catalog.js?v=8';
+import {recipes} from './recipes.js?v=9';
+import {identifyLunch,indexRecipe,normalize} from './lunch-catalog.js?v=9';
 
 const family = ['Mauro','Cassandra','Francesca','Lorenzo'];
 const days = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
@@ -44,29 +44,60 @@ function registerRecipe({id,type,name,ingredients,prep,source}) {
 const recipeEditor = document.querySelector('#recipeEditor');
 const recipeForm = document.querySelector('#recipeForm');
 const ingredientRows = document.querySelector('#ingredientRows');
-const storageKey = 'maurapp-menu-v1';
+const storageKey = 'maurapp-weeks-v2';
+const legacyStorageKey = 'maurapp-menu-v1';
+const historyDialog = document.querySelector('#weekHistory');
+const historyDate = document.querySelector('#historyDate');
+const dateFormat = new Intl.DateTimeFormat('it-IT',{day:'numeric',month:'short',year:'numeric'});
+function dateKey(date) {
+  return [date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('-');
+}
+function fromKey(key) {
+  const [year,month,day] = key.split('-').map(Number);
+  return new Date(year,month-1,day,12);
+}
+function weekKey(date = new Date()) {
+  const monday = new Date(date.getFullYear(),date.getMonth(),date.getDate(),12);
+  monday.setDate(monday.getDate()-(monday.getDay()+6)%7);
+  return dateKey(monday);
+}
+function weekLabel(key) {
+  const start = fromKey(key);
+  const end = fromKey(key);
+  end.setDate(end.getDate()+6);
+  return dateFormat.formatRange(start,end);
+}
+function emptyWeek() {
+  return Array.from({length:7},()=>({lunches:['',''],dinner:null,side:null,turn:0}));
+}
+function readWeeks() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey));
+    if (saved && Array.isArray(saved.days) && saved.days.length===7 && typeof saved.active==='string') return saved;
+    const legacy = JSON.parse(localStorage.getItem(legacyStorageKey));
+    if (Array.isArray(legacy) && legacy.length===7) return {active:weekKey(),days:legacy,archive:{}};
+  } catch {}
+  return {active:weekKey(),days:emptyWeek(),archive:{}};
+}
 const categoryNames = {
   pasta:'Pasta', riso:'Riso', pane:'Pane e pizza', couscous:'Altri cereali', patate:'Patate',
   manzo:'Carne', pollo:'Pollo e tacchino', pesce:'Pesce', legumi:'Legumi',
   uova:'Uova', latticini:'Latticini', verdure:'Verdure'
 };
-const today = (new Date().getDay()+6)%7;
 const main = document.querySelector('#main');
 const book = document.querySelector('#book');
 const dialog = document.querySelector('#editor');
 const input = document.querySelector('#lunchInput');
 const announce = document.querySelector('#announce');
-let state = Array.from({length:7}, () => ({lunches:['',''], dinner:null, side:null}));
-try {
-  const saved = JSON.parse(localStorage.getItem(storageKey));
-  if (Array.isArray(saved) && saved.length === 7) state = saved;
-} catch {}
+let ledger = readWeeks();
+let state = ledger.days;
+let viewedWeek = null;
 let editing;
 let lunchTrigger;
 let weekScroll=0;
 let recipeFilter = "all";
 const save = () => {
-  try { localStorage.setItem(storageKey,JSON.stringify(state)); return true; }
+  try { localStorage.setItem(storageKey,JSON.stringify(ledger)); return true; }
   catch { return false; }
 };
 function safeSource(value) {
@@ -106,7 +137,7 @@ function mealScore(key,lunch) {
   const {protein,carb} = recipes[key];
   return -(lunch.includes(carb) ? 3 : 0) - (lunch.includes(protein) ? 4 : 0);
 }
-function choose(index, exclude = null) {
+function choose(index, exclude = null, randomize = false) {
   const day = state[index];
   const lunches = day.lunches.map((_,person) => categoriesFor(index,person));
   const turn = day.turn ?? 0;
@@ -118,7 +149,7 @@ function choose(index, exclude = null) {
   const history = new Set(day.tried ?? []);
   if(exclude) history.add(exclude);
   const selection = split ? pairs : mains;
-  const offset = (index+turn)%selection.length;
+  const offset = randomize ? Math.floor(Math.random()*selection.length) : (index+turn)%selection.length;
   const ordered = [...selection.slice(offset),...selection.slice(0,offset)];
   let available = ordered.filter(key=>key!==exclude && !history.has(key));
   if (!available.length) {
@@ -127,6 +158,10 @@ function choose(index, exclude = null) {
   }
   const neighbors = state.flatMap(({dinner},other)=>other!==index && dinner ?
     dinnerParts(dinner).map(key=>[key,Math.abs(other-index)===1 ? 2 : 1]) : []);
+  const previousMonday = fromKey(ledger.active);
+  previousMonday.setDate(previousMonday.getDate()-7);
+  const priorDinners = ledger.archive[dateKey(previousMonday)] ?? [];
+  const sameDayLastWeek = priorDinners[index]?.dinner;
   const freshness = key => {
     const {protein,carb} = recipes[key];
     return neighbors.reduce((score,[other,weight]) => {
@@ -134,7 +169,7 @@ function choose(index, exclude = null) {
       const previous = recipes[other];
       return score - (protein && protein===previous?.protein ? weight : 0)
         - (carb && carb===previous?.carb ? weight/2 : 0);
-    },0);
+    },sameDayLastWeek && dinnerParts(sameDayLastWeek).includes(key) ? -1.5 : 0);
   };
   const score = key => {
     const [a,b] = dinnerParts(key);
@@ -169,12 +204,32 @@ function setDinner(index,key) {
     + (recipes[id].carb && [0,1].some(person=>categoriesFor(index,person).includes(recipes[id].carb)) ? 3 : 0);
   state[index].side = rankedSides.reduce((best,id)=>prefer(id)<prefer(best) ? id : best);
 }
-state.forEach((day,i) => {
-  const valid = typeof day.dinner==='string' && dinnerParts(day.dinner).every(key=>mains.includes(key));
-  if (!valid || !sides.includes(day.side) || (day.turn===undefined && [1,5].includes(i) && !day.lunches.some(Boolean) && dinnerParts(day.dinner).length===1)) choose(i);
-  day.turn ??= 0;
-});
-save();
+function initializeWeek() {
+  state.forEach((day,i) => {
+    const valid = typeof day.dinner==='string' && dinnerParts(day.dinner).every(key=>mains.includes(key));
+    if (!valid || !sides.includes(day.side) || (day.turn===undefined && [1,5].includes(i) && !day.lunches.some(Boolean) && dinnerParts(day.dinner).length===1)) choose(i,null,true);
+    day.turn ??= 0;
+  });
+}
+function rollWeek() {
+  const current = weekKey();
+  if (current<=ledger.active) return false;
+  const latest = readWeeks();
+  if(latest.active>=current) {
+    ledger=latest;
+    state=ledger.days;
+  } else {
+    if(latest.active===ledger.active) ledger=latest;
+    ledger.archive[ledger.active]=ledger.days;
+    ledger.active=current;
+    ledger.days=emptyWeek();
+    state=ledger.days;
+    initializeWeek();
+    save();
+  }
+  return true;
+}
+if(!rollWeek()){initializeWeek();save();}
 
 const escaped = value => value.replace(/[&<>"']/g,char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const amount = new Intl.NumberFormat('it-IT',{maximumFractionDigits:2});
@@ -186,7 +241,9 @@ function meal(id,n,who) {
 }
 function dinnerMarkup({dinner,side,portionMix}) {
   const [a,b] = dinnerParts(dinner);
-  if (!b) return meal(a,4,'Tutti')+meal(side,4,'Tutti');
+  const sharedSide = recipes[side] ? meal(side,4,'Tutti') : '';
+  if (!recipes[a] || (b && !recipes[b])) return '<p>Proposta non disponibile</p>'+sharedSide;
+  if (!b) return meal(a,4,'Tutti')+sharedSide;
   const teams = [
     [['Mauro','Francesca'],['Cassandra','Lorenzo']],
     [['Mauro','Francesca','Lorenzo'],['Cassandra']],
@@ -194,19 +251,57 @@ function dinnerMarkup({dinner,side,portionMix}) {
   ];
   const [first,second] = teams[dinner===legacySplit ? 1 : portionMix ?? 0];
   const format = names => new Intl.ListFormat('it').format(names);
-  return meal(a,first.length,format(first))+meal(b,second.length,format(second))+meal(side,4,'Tutti');
+  return meal(a,first.length,format(first))+meal(b,second.length,format(second))+sharedSide;
 }
-function lunchButton(index,person) {
-  const value = state[index].lunches[person];
+function lunchButton(index,person,day = state[index], archived = false) {
+  const value = day.lunches[person];
   const name = family[person];
-  const summary = (state[index].categories?.[person] ?? []).map(key => categoryNames[key]).join(', ');
+  const summary = (day.categories?.[person] ?? []).map(key => categoryNames[key]).join(', ');
   const lunchText = value || summary;
+  if(archived) return `<div class="lunch archived-lunch"><span class="person">${name}</span><span class="lunch-text">${lunchText ? escaped(lunchText) : '—'}</span></div>`;
   return `<button class="lunch" data-lunch="${person}" data-day="${index}" aria-label="${lunchText ? 'Modifica' : 'Aggiungi'} pranzo di ${name}, ${days[index]}"><span aria-hidden="true">${person ? '🌸' : '🌞'}</span><span class="person">${name}</span><span class="lunch-text">${lunchText ? escaped(lunchText) : 'Aggiungi pranzo'}</span><span class="edit" aria-hidden="true">✎</span></button>`;
 }
 function renderWeek() {
-  main.innerHTML = `<div class="section-head"><h1 class="section-title">Menù della settimana</h1></div>
-  <div class="week">${days.map((day,i) => `<article class="day" id="day-${i}"><div class="day-head"><span class="day-mark" aria-hidden="true">${dayIcons[i]}</span><h3>${day}</h3>${today===i ? '<span class="current">Oggi</span>' : ''}</div><div class="lunches">${lunchButton(i,0)}${lunchButton(i,1)}</div><div class="dinner"><div class="dinner-content"><div class="dinner-label">Cena proposta</div><div class="meals">${dinnerMarkup(state[i])}</div></div><div class="dinner-actions"><button class="change" data-change="${i}" aria-label="Altra proposta, ${day}"><span aria-hidden="true">⟳</span> Altra proposta</button></div></div></article>`).join('')}</div>`;
+  const archived = Boolean(viewedWeek && ledger.archive[viewedWeek]);
+  const menu = archived ? ledger.archive[viewedWeek] : state;
+  const selected = archived ? viewedWeek : ledger.active;
+  const today = (new Date().getDay()+6)%7;
+  const calendar = '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18m-13 5h2m4 0h2"/></svg>';
+  main.innerHTML = `<div class="section-head"><div><h1 class="section-title">${archived ? 'Menù archiviato' : 'Menù della settimana'}</h1><p class="week-dates">${weekLabel(selected)}</p></div><div class="history-actions">${archived ? '<button class="outline" data-current-week>Settimana attuale</button>' : ''}<button class="outline calendar-button" data-history aria-label="Settimane passate" title="Settimane passate">${calendar}</button></div></div>
+  <div class="week">${days.map((day,i) => `<article class="day" id="day-${i}"><div class="day-head"><span class="day-mark" aria-hidden="true">${dayIcons[i]}</span><h3>${day}</h3>${!archived && today===i ? '<span class="current">Oggi</span>' : ''}</div><div class="lunches">${lunchButton(i,0,menu[i],archived)}${lunchButton(i,1,menu[i],archived)}</div><div class="dinner"><div class="dinner-content"><div class="dinner-label">${archived ? 'Cena' : 'Cena proposta'}</div><div class="meals">${dinnerMarkup(menu[i])}</div></div>${archived ? '' : `<div class="dinner-actions"><button class="change" data-change="${i}" aria-label="Altra proposta, ${day}"><span aria-hidden="true">⟳</span> Altra proposta</button></div>`}</div></article>`).join('')}</div>`;
 }
+function openHistory() {
+  const previous = fromKey(ledger.active);
+  previous.setDate(previous.getDate()-1);
+  historyDate.max = dateKey(previous);
+  historyDate.value = viewedWeek ?? '';
+  document.querySelector('#historyMessage').textContent = '';
+  const keys = Object.keys(ledger.archive).sort().reverse().slice(0,6);
+  document.querySelector('#recentWeeks').innerHTML = keys.length
+    ? '<h3>Settimane recenti</h3>'+keys.map(key=>`<button class="outline" type="button" data-open-week="${key}">${weekLabel(key)}</button>`).join('')
+    : '<p>Le settimane appariranno qui dopo il cambio del lunedì.</p>';
+  historyDialog.showModal();
+}
+function openArchivedWeek(key) {
+  if(!Object.hasOwn(ledger.archive,key)) {
+    document.querySelector('#historyMessage').textContent = 'Nessun menù salvato per questa settimana.';
+    return;
+  }
+  viewedWeek = key;
+  weekScroll = 0;
+  historyDialog.close();
+  renderRoute();
+  main.querySelector('[data-current-week]').focus();
+}
+historyDialog.querySelector('.close').onclick = () => historyDialog.close();
+document.querySelector('#historyForm').addEventListener('submit',event => {
+  event.preventDefault();
+  if(historyDate.value) openArchivedWeek(weekKey(fromKey(historyDate.value)));
+});
+document.querySelector('#recentWeeks').addEventListener('click',event => {
+  const target = event.target.closest('[data-open-week]');
+  if(target) openArchivedWeek(target.dataset.openWeek);
+});
 function ingredients(recipe,n) {
   return '<ul>'+recipe.ingredients.map(([name,quantity,unit]) => `<li>${escaped(name)} · ${amount.format(quantity*n/4)}${unit ? ' '+escaped(unit) : ''}</li>`).join('')+'</ul>';
 }
@@ -251,6 +346,13 @@ book.addEventListener('click',() => {
   location.hash = book.dataset.view === 'week' ? '' : 'ricettario';
 });
 main.addEventListener('click',event => {
+  if (event.target.closest('[data-history]')) openHistory();
+  if (event.target.closest('[data-current-week]')) {
+    viewedWeek = null;
+    weekScroll = 0;
+    renderRoute();
+    main.querySelector('[data-history]').focus();
+  }
   if (event.target.closest('[data-new-recipe]')) openRecipeEditor();
   const filter = event.target.closest('[data-filter]');
   if (filter) {
@@ -376,8 +478,18 @@ window.addEventListener('storage',event => {
   }
   if (event.key !== storageKey || !event.newValue || dialog.open) return;
   readUserRecipes().forEach(registerRecipe);
-  state = JSON.parse(event.newValue);
+  ledger = JSON.parse(event.newValue);
+  state = ledger.days;
   if (document.querySelector('.week')) { weekScroll=scrollY; renderRoute(); }
 });
+function checkCalendar() {
+  if(dialog.open || historyDialog.open) return;
+  if(rollWeek() && document.querySelector('.week')) renderRoute();
+}
+window.addEventListener('focus',checkCalendar);
+document.addEventListener('visibilitychange',() => { if (!document.hidden) checkCalendar(); });
+setInterval(checkCalendar,15000);
+dialog.addEventListener('close',checkCalendar);
+historyDialog.addEventListener('close',checkCalendar);
 renderRoute();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});

@@ -1,5 +1,5 @@
-const cacheName = 'maurapp-static-v11';
-const assets = ['./','./style.css?v=8','./app.js?v=8','./recipes.js?v=8','./lunch-catalog.js?v=8','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
+const cacheName = 'maurapp-static-v13';
+const assets = ['./','./style.css?v=9','./app.js?v=9','./recipes.js?v=9','./lunch-catalog.js?v=9','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
 
 self.addEventListener('install',event => {
   event.waitUntil(caches.open(cacheName)
