@@ -1,4 +1,4 @@
-const APP_CONFIG = {"name": "Maurapp", "key": "maurapp:initial-access:v1", "digest": "9b495fc51469c869f80065a3695458b1310af942f8280adbdb3bfe96e938477e", "entry": "./app.js?v=8", "numeric": false};
+const APP_CONFIG = {"name": "Maurapp", "key": "maurapp:initial-access:v1", "digest": "7c124eabce04310d3ac8bb7f02779d9da6bc36d1bf93f439aadc1bffd4d48f50", "entry": "./app.js?v=8", "numeric": true};
 
 const { name, key, digest, entry, numeric } = APP_CONFIG;
 const form = document.querySelector('#initial-access form');
