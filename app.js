@@ -1,5 +1,5 @@
-import {recipes} from './recipes.js?v=6';
-import {identifyLunch,indexRecipe,normalize} from './lunch-catalog.js?v=6';
+import {recipes} from './recipes.js?v=7';
+import {identifyLunch,indexRecipe,normalize} from './lunch-catalog.js?v=7';
 
 const family = ['Mauro','Cassandra','Francesca','Lorenzo'];
 const days = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
@@ -52,6 +52,7 @@ const categoryNames = {
 };
 const today = (new Date().getDay()+6)%7;
 const main = document.querySelector('#main');
+const book = document.querySelector('#book');
 const dialog = document.querySelector('#editor');
 const input = document.querySelector('#lunchInput');
 const announce = document.querySelector('#announce');
@@ -204,15 +205,20 @@ function ingredients(recipe,n) {
 function renderRoute() {
   const [,id,p] = location.hash.slice(1).split('/');
   const n = /^[1-4]$/.test(p) ? Number(p) : 4;
-  if (location.hash === '#ricettario') {
-    main.innerHTML = `<div class="view-head"><a class="outline back" href="#">Menù della settimana</a><div class="book-title"><h1>Ricettario</h1><button class="primary" data-new-recipe>＋ Nuova ricetta</button></div></div>${recipeGroups.map(([title,keys]) => `<section class="recipe-group"><h2>${title}</h2><div class="recipes">${keys.map(key => {
+  const inBook = location.hash === '#ricettario';
+  const inRecipe = location.hash.startsWith('#ricetta/') && Object.hasOwn(recipes,id);
+  book.dataset.view = inBook || inRecipe ? 'week' : 'book';
+  book.querySelector('.nav-label').textContent = inBook || inRecipe ? 'Menù della settimana' : 'Ricettario';
+  book.querySelector('[aria-hidden]').textContent = inBook || inRecipe ? '📅' : '📖';
+  if (inBook) {
+    main.innerHTML = `<div class="view-head"><div class="book-title"><h1>Ricettario</h1><button class="primary" data-new-recipe>＋ Nuova ricetta</button></div></div>${recipeGroups.map(([title,keys]) => `<section class="recipe-group"><h2>${title}</h2><div class="recipes">${keys.map(key => {
       const recipe = recipes[key];
       return `<article class="recipe"><h3><span aria-hidden="true">${recipe.icon}</span> ${escaped(recipe.name)}</h3><p>4 persone</p>${ingredients(recipe,4)}<a href="${href(key,4)}">Leggi la preparazione</a></article>`;
     }).join('')}</div></section>`).join('')}`;
     scrollTo(0,0);
-  } else if (location.hash.startsWith('#ricetta/') && Object.hasOwn(recipes,id)) {
+  } else if (inRecipe) {
     const recipe = recipes[id];
-    main.innerHTML = `<div class="view-head"><a class="outline back" href="#">Menù della settimana</a> <a class="outline back" href="#ricettario">Ricettario</a><div class="recipe-title"><h1>${escaped(recipe.name)}</h1>${recipe.source ? `<a class="outline source" href="${escaped(recipe.source)}" target="_blank" rel="noopener noreferrer">Fonte <span aria-hidden="true">↗</span></a>` : ''}</div></div><article class="prep"><strong>${n} ${n === 1 ? 'persona' : 'persone'}</strong>${ingredients(recipe,n)}<h2>Preparazione</h2><p>${escaped(recipe.prep)}</p></article>`;
+    main.innerHTML = `<div class="view-head"> <a class="outline back" href="#ricettario">Ricettario</a><div class="recipe-title"><h1>${escaped(recipe.name)}</h1>${recipe.source ? `<a class="outline source" href="${escaped(recipe.source)}" target="_blank" rel="noopener noreferrer">Fonte <span aria-hidden="true">↗</span></a>` : ''}</div></div><article class="prep"><strong>${n} ${n === 1 ? 'persona' : 'persone'}</strong>${ingredients(recipe,n)}<h2>Preparazione</h2><p>${escaped(recipe.prep)}</p></article>`;
     scrollTo(0,0);
   } else {
     renderWeek();
@@ -228,9 +234,9 @@ function refreshDinner(index) {
 function report(message) {
   announce.textContent = save() ? message : message+' Il browser non ha consentito il salvataggio.';
 }
-document.querySelector('#book').addEventListener('click',() => {
-  if (document.querySelector('.week')) weekScroll=scrollY;
-  location.hash = 'ricettario';
+book.addEventListener('click',() => {
+  if (book.dataset.view === 'book') weekScroll=scrollY;
+  location.hash = book.dataset.view === 'week' ? '' : 'ricettario';
 });
 main.addEventListener('click',event => {
   if (event.target.closest('[data-new-recipe]')) openRecipeEditor();
