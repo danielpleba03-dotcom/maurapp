@@ -2,22 +2,21 @@
 <html lang="it">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#fffaf2"><meta name="description" content="Organizza le cene di Mauro, Francesca, Lorenzo e Cassandra.">
+<meta name="theme-color" content="#f5f7f2"><meta name="description" content="Organizza le cene di Mauro, Francesca, Lorenzo e Cassandra.">
 <title>Maurapp · Le cene di famiglia</title>
 <link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="./icon-192.png">
 <link rel="stylesheet" href="./style.css"><script src="./app.js" type="module"></script>
 </head>
 <body>
-<header class="top"><div class="bar"><a class="brand" href="#" aria-label="Maurapp, menù della settimana"><img src="./icon.svg" alt="" width="47" height="47">Maurapp<span>.</span></a><button id="book" class="outline"><span aria-hidden="true">📖</span> Ricettario</button></div></header>
+<header class="top"><div class="bar"><a class="brand" href="#" aria-label="Maurapp, menù della settimana"><img src="./icon.svg" alt="" width="47" height="47">Maurapp<span>.</span></a><div class="top-actions"><button id="install" class="outline">Installa</button><button id="book" class="outline">Ricettario</button></div></div></header>
 <main id="main"></main>
-<footer>Fatto per Mauro, Francesca, Lorenzo e Cassandra <span aria-hidden="true">♥</span></footer>
-<dialog id="editor"><form id="lunchForm"><div class="dialog-top"><h2 id="editTitle"></h2><button type="button" class="close" aria-label="Chiudi">×</button></div><p id="editDay"></p><label for="lunchInput">Cosa hai mangiato a pranzo?</label><input id="lunchInput" maxlength="180" placeholder="Es. pasta al pomodoro"><fieldset class="lunch-types"><legend>Cosa comprendeva?</legend><p id="categoryHint">Controlla le categorie suggerite o selezionale tu.</p><div id="categoryChoices" aria-describedby="categoryHint"></div><button type="button" id="autoCategories" class="text-button">Ripristina suggerimenti automatici</button></fieldset><div class="dialog-actions"><button type="button" class="outline" id="cancel">Annulla</button><button class="primary" type="submit">Salva pranzo</button></div></form></dialog>
-<dialog id="dinnerPicker"><div class="dialog-top"><h2>Scegli la cena</h2><button type="button" class="close" data-close aria-label="Chiudi">×</button></div><p id="pickerDay"></p><div id="dinnerChoices"></div></dialog>
+<dialog id="editor"><form id="lunchForm"><div class="dialog-top"><h2 id="editTitle"></h2><button type="button" class="close" aria-label="Chiudi">×</button></div><p id="editDay"></p><label for="lunchInput">Cosa hai mangiato a pranzo?</label><input id="lunchInput" maxlength="180" placeholder="Es. pasta al pomodoro"><p id="lunchMatch" class="lunch-match" aria-live="polite"></p><div class="dialog-actions"><button type="button" class="outline" id="cancel">Annulla</button><button class="primary" type="submit">Salva pranzo</button></div></form></dialog>
+<dialog id="installHelp"><div class="dialog-top"><h2>Installa Maurapp</h2><button type="button" class="close" data-close aria-label="Chiudi">×</button></div><p id="installInstructions"></p></dialog>
 <dialog id="recipeEditor"><form id="recipeForm"><div class="dialog-top"><h2>Nuova ricetta</h2><button type="button" class="close" data-close aria-label="Chiudi">×</button></div><p>Indica gli ingredienti per 4 persone.</p>
 <label for="recipeName">Nome del piatto</label><input id="recipeName" maxlength="100" required>
-<label for="recipeType">Categoria</label><select id="recipeType"><option value="first">Primi</option><option value="second">Secondi</option><option value="side">Contorni ed altro · Contorno</option><option value="other">Contorni ed altro · Altro piatto</option></select>
+<label for="recipeType">Categoria</label><select id="recipeType"><option value="first">Primi</option><option value="second">Secondi</option><option value="other">Contorni ed altro</option></select><label id="sideChoice" class="side-choice" hidden><input id="recipeSide" type="checkbox"> Usa come contorno</label>
 <fieldset class="ingredients-editor"><legend>Ingredienti</legend><div id="ingredientRows"></div><button type="button" class="outline" id="addIngredient">Aggiungi ingrediente</button></fieldset>
-<label for="recipePrep">Preparazione</label><textarea id="recipePrep" rows="3" maxlength="4000" required></textarea><p id="recipeError" role="alert"></p>
+<label for="recipePrep">Preparazione</label><textarea id="recipePrep" rows="3" maxlength="4000" required></textarea><label for="recipeSource">Link alla fonte (facoltativo)</label><input id="recipeSource" type="url" placeholder="https://…"><p id="recipeError" role="alert"></p>
 <div class="dialog-actions"><button type="button" class="outline" data-close>Annulla</button><button type="submit" class="primary">Salva ricetta</button></div></form></dialog>
 <p id="announce" class="sr" role="status"></p>
 </body>

@@ -17,6 +17,49 @@ const items = [
  ['broccoli','Broccoli saltati','🥦','','', [['Broccoli',640,'g'],['Olio d’oliva',24,'ml'],['Aglio',2,'spicchi'],['Sale',2,'g']], 'Dividi i broccoli in cimette e sbollentali finché sono quasi teneri. Scolali e saltali in padella per qualche minuto con olio e aglio. Aggiusta di sale.'],
  ['verdure','Verdure in teglia','🥕','','', [['Carote',240,'g'],['Zucchine',240,'g'],['Peperoni',240,'g'],['Olio d’oliva',24,'ml'],['Sale',2,'g']], 'Taglia piccoli pezzi di carota, zucchina e peperone. Mescolali con olio e sale, stendili in un solo strato e arrostisci a 200 °C per circa 25 minuti, mescolando a metà.'],
  ['insalata','Insalata croccante','🥗','','', [['Lattuga',200,'g'],['Carote',160,'g'],['Cetrioli',240,'g'],['Olio d’oliva',20,'ml'],['Succo di limone',20,'ml'],['Sale',2,'g']], 'Lava e asciuga la lattuga. Affetta i cetrioli e grattugia le carote. Mescola e condisci con olio, limone e sale al momento di servire.'],
- ['fagiolini','Fagiolini al limone','🌿','','', [['Fagiolini',640,'g'],['Olio d’oliva',20,'ml'],['Limone',1,''],['Sale',2,'g']], 'Spunta i fagiolini e lessali in acqua finché sono teneri. Scolali e condiscili con succo di limone, olio e sale.']
+ ['fagiolini','Fagiolini al limone','🌿','','', [['Fagiolini',640,'g'],['Olio d’oliva',20,'ml'],['Limone',1,''],['Sale',2,'g']], 'Spunta i fagiolini e lessali in acqua finché sono teneri. Scolali e condiscili con succo di limone, olio e sale.'],
+ ['piselli','Pasta e piselli','🍝','legumi','pasta',[['Pasta corta',300,'g'],['Piselli',320,'g'],['Cipolla',80,'g'],['Olio d’oliva',20,'ml'],['Acqua',750,'ml'],['Sale',3,'g']],'Fai appassire la cipolla nell’olio. Aggiungi piselli e acqua calda e porta a bollore. Aggiungi la pasta, mescola e cuoci aggiungendo altra acqua se serve. Aggiusta di sale.'],
+ ['zucca','Risotto alla zucca','🍚','','riso',[['Riso Carnaroli',300,'g'],['Zucca pulita',450,'g'],['Brodo vegetale',950,'ml'],['Cipolla',60,'g'],['Olio d’oliva',20,'ml'],['Parmigiano',40,'g']],'Fai appassire la cipolla nell’olio e unisci la zucca a cubetti. Cuoci finché si ammorbidisce, aggiungi il riso e tostalo brevemente. Versa il brodo caldo poco per volta e mescola fino a cottura. Completa con il parmigiano.'],
+ ['limone','Pollo al limone','🍋','pollo','',[['Petto di pollo',560,'g'],['Farina',40,'g'],['Olio d’oliva',20,'ml'],['Succo di limone',50,'ml'],['Acqua',100,'ml'],['Sale',2,'g']],'Infarina il pollo e rosolalo su entrambi i lati. Aggiungi acqua e limone e cuoci fino a 74 °C al centro, lasciando addensare il sughetto. Regola di sale.'],
+ ['caprese','Insalata caprese','🍅','latticini','',[['Pomodori',520,'g'],['Mozzarella',400,'g'],['Olio d’oliva',24,'ml'],['Basilico',12,'foglie'],['Sale',2,'g']],'Scola la mozzarella e affettala insieme ai pomodori. Alterna le fette, aggiungi basilico, sale e olio e servi.'],
+ ['carote','Carote in padella','🥕','','',[['Carote',640,'g'],['Olio d’oliva',24,'ml'],['Acqua',80,'ml'],['Prezzemolo',8,'g'],['Sale',2,'g']],'Taglia le carote a rondelle sottili. Rosolale nell’olio, aggiungi acqua e copri finché diventano tenere. Togli il coperchio, fai evaporare l’acqua e condisci.'],
+ ['lentiche','Zuppa di lenticchie','🥣','legumi','',[['Lenticchie secche',280,'g'],['Carote',120,'g'],['Sedano',60,'g'],['Cipolla',80,'g'],['Acqua',1050,'ml'],['Olio d’oliva',20,'ml'],['Sale',3,'g']],'Soffriggi le verdure a cubetti nell’olio. Sciacqua le lenticchie, uniscile con l’acqua e lascia sobbollire finché sono tenere, seguendo i tempi della confezione. Sala a fine cottura.'],
+ ['cannellini','Fagioli all’uccelletto','🫘','legumi','',[['Cannellini cotti',600,'g'],['Passata di pomodoro',320,'g'],['Aglio',2,'spicchi'],['Salvia',8,'foglie'],['Olio d’oliva',24,'ml'],['Sale',2,'g']],'Scalda olio, aglio e salvia. Versa la passata e falla restringere per dieci minuti. Unisci i cannellini scolati e lascia insaporire a fuoco basso. Regola di sale.'],
+ ['orata','Orata al forno','🐟','pesce','',[['Filetti di orata',4,''],['Limone',1,''],['Olio d’oliva',24,'ml'],['Prezzemolo',8,'g'],['Sale',2,'g']],'Disponi i filetti in teglia e condiscili con limone, olio e sale. Cuoci a 190 °C finché il centro raggiunge 63 °C. Guarnisci con prezzemolo.'],
+ ['bruschetta','Bruschette al pomodoro','🍅','','pane',[['Pane',8,'fette'],['Pomodori',480,'g'],['Aglio',2,'spicchi'],['Basilico',12,'foglie'],['Olio d’oliva',24,'ml'],['Sale',2,'g']],'Condisci i pomodori a dadini con olio, sale e basilico. Tosta il pane, strofinalo con poco aglio e coprilo con i pomodori.'],
+ ['uova','Uova al pomodoro','🍳','uova','',[['Uova',8,''],['Passata di pomodoro',500,'g'],['Olio d’oliva',20,'ml'],['Aglio',1,'spicchio'],['Sale',2,'g']],'Fai insaporire l’olio con l’aglio, aggiungi passata e sale e cuoci per circa dieci minuti. Forma degli spazi nel sugo, sguscia le uova e cuoci con il coperchio fino alla consistenza desiderata.']
 ];
-export const recipes = Object.fromEntries(items.map(([id,name,icon,protein,carb,ingredients,prep]) => [id,{name,icon,protein,carb,ingredients,prep}]));
+const gz = slug => 'https://ricette.giallozafferano.it/'+slug+'.html';
+const sources = {
+ manzo:'https://labottegadinicolai.it/straccetti-al-limone/',
+ pesce:gz('Merluzzo-in-friggitrice-ad-aria'),
+ riso:'https://alimentazionebambini.e-coop.it/ricette-per-bambini/ricette-bambini-1-3-anni/riso-basmati-e-piselli/',
+ pollo:'https://www.cucinare.it/ricetta/bocconcini-di-pollo-croccanti',
+ pasta:gz('Spaghetti-al-pomodoro'),
+ farfalle:gz('Pasta-zucchine-e-pomodorini'),
+ frittata:gz('Frittata-di-zucchine'),
+ piadina:'https://www.sterilgarda.it/ricette-sterilgarda/piadina-straki-pomodoro-crudo-rucola/',
+ burger:'https://blog.giallozafferano.it/cucinoperpassione/hamburger-di-manzo-con-verdure-grigliate/',
+ ceci:gz('Polpette-di-ceci'),
+ verdure:gz('Verdure-al-forno'),
+ insalata:'https://www.soscuisine.ch/it/ricetta/insalata-cetrioli-carote',
+ fagiolini:'https://blog.giallozafferano.it/chezbibia/fagiolini-al-limone/',
+ pesto:'https://www.eataly.net/it_it/magazine/ricette/pasta-al-pesto',
+ couscous:'https://blog.giallozafferano.it/cucinavistamare/ricetta-insalata-di-carote-con-ceci-e-cous-cous/',
+ tacchino:'https://www.cucchiaio.it/ricetta/scaloppine-di-tacchino-al-limone/',
+ salmone:gz('Salmone-al-forno'),
+ patate:'https://www.moulinex.it/ricette/detail/PRO/spicchi-di-patate/2791076',
+ broccoli:gz('Broccoli-in-padella'),
+ piselli:gz('Pasta-e-piselli'),
+ zucca:gz('Risotto-alla-zucca'),
+ limone:gz('Pollo-al-limone'),
+ caprese:'https://www.lacucinaitaliana.it/ricetta/antipasti/caprese/',
+ carote:'https://www.cucchiaio.it/ricetta/carote-in-padella/',
+ lentiche:gz('Zuppa-di-lenticchie'),
+ cannellini:gz('Fagioli-all-uccelletto'),
+ orata:gz('Orata-al-forno'),
+ bruschetta:gz('Bruschette-al-pomodoro'),
+ uova:gz('Uova-in-purgatorio')
+};
+export const recipes = Object.fromEntries(items.map(([id,name,icon,protein,carb,ingredients,prep]) =>
+ [id,{name,icon,protein,carb,ingredients,prep,source:sources[id]}]));
