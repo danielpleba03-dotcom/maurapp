@@ -1,20 +1,20 @@
-import {recipes} from './recipes.js?v=7';
-import {identifyLunch,indexRecipe,normalize} from './lunch-catalog.js?v=7';
+import {recipes} from './recipes.js?v=8';
+import {identifyLunch,indexRecipe,normalize} from './lunch-catalog.js?v=8';
 
 const family = ['Mauro','Cassandra','Francesca','Lorenzo'];
 const days = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
 const dayIcons = ['🌿','☀️','🥕','🍋','⭐','🌼','🧡'];
-const mains = ['pollo','riso','frittata','manzo','pesce','burger','pasta','piadina','ceci','farfalle','pesto','couscous','tacchino','salmone','piselli','zucca','limone','lentiche','cannellini','orata','uova','caprese'];
-const sides = ['verdure','insalata','fagiolini','broccoli','patate','carote','bruschetta'];
+const mains = ['pollo','riso','frittata','manzo','pesce','burger','pasta','piadina','ceci','farfalle','pesto','couscous','tacchino','salmone','piselli','zucca','limone','lentiche','cannellini','orata','uova','caprese','zucchina-pasta','tonno-limone','pizzaiola-pollo','merluzzo-padella'];
+const sides = ['verdure','insalata','fagiolini','broccoli','patate','carote','bruschetta','zucchine-trifolate','finocchi-gratinati'];
 const recipeGroups = [
-  ['Primi',['pasta','farfalle','pesto','riso','couscous','piselli','zucca','lentiche']],
-  ['Secondi',['manzo','pollo','tacchino','pesce','salmone','frittata','burger','limone','cannellini','orata','uova','caprese']],
-  ['Contorni ed altro',['verdure','insalata','fagiolini','broccoli','patate','piadina','ceci','carote','bruschetta']]
+  ['Primi',['pasta','farfalle','pesto','riso','couscous','piselli','zucca','lentiche','zucchina-pasta','tonno-limone']],
+  ['Secondi',['manzo','pollo','tacchino','pesce','salmone','frittata','burger','limone','cannellini','orata','uova','caprese','pizzaiola-pollo','merluzzo-padella']],
+  ['Contorni ed altro',['verdure','insalata','fagiolini','broccoli','patate','piadina','ceci','carote','bruschetta','zucchine-trifolate','finocchi-gratinati']]
 ];
 const legacySplit = 'pesce-riso';
 const splitWork = {
   rapido:['manzo','tacchino','burger','limone','caprese','piadina'],
-  fornello:['riso','pasta','farfalle','pesto','piselli','zucca','uova','cannellini','frittata','couscous'],
+  fornello:['riso','pasta','farfalle','pesto','piselli','zucca','uova','cannellini','frittata','couscous','zucchina-pasta','tonno-limone','pizzaiola-pollo','merluzzo-padella'],
   forno:['salmone','orata','ceci'],
   aria:['pesce','pollo']
 };
@@ -64,6 +64,7 @@ try {
 let editing;
 let lunchTrigger;
 let weekScroll=0;
+let recipeFilter = "all";
 const save = () => {
   try { localStorage.setItem(storageKey,JSON.stringify(state)); return true; }
   catch { return false; }
@@ -126,8 +127,15 @@ function choose(index, exclude = null) {
   }
   const neighbors = state.flatMap(({dinner},other)=>other!==index && dinner ?
     dinnerParts(dinner).map(key=>[key,Math.abs(other-index)===1 ? 2 : 1]) : []);
-  const freshness = key => neighbors.reduce((score,[other,weight]) => score -
-    (other===key ? 3*weight : (recipes[key].protein && recipes[key].protein===recipes[other]?.protein ? weight : 0)),0);
+  const freshness = key => {
+    const {protein,carb} = recipes[key];
+    return neighbors.reduce((score,[other,weight]) => {
+      if (other===key) return score-3*weight;
+      const previous = recipes[other];
+      return score - (protein && protein===previous?.protein ? weight : 0)
+        - (carb && carb===previous?.carb ? weight/2 : 0);
+    },0);
+  };
   const score = key => {
     const [a,b] = dinnerParts(key);
     let points = 2*(mealScore(a,lunches[0])+mealScore(b ?? a,lunches[1]))+freshness(a);
@@ -154,7 +162,7 @@ function setDinner(index,key) {
   const usesOven = mainsTonight.some(id=>methods[id]==='forno');
   const usesAir = mainsTonight.some(id=>methods[id]==='aria');
   const rankedSides = [...sides.slice(offset),...sides.slice(0,offset)].filter(id =>
-    !(id==='verdure' && usesOven) && !(id==='patate' && usesAir) &&
+    !(['verdure','finocchi-gratinati'].includes(id) && usesOven) && !(id==='patate' && usesAir) &&
     !(recipes[id].carb && mainsTonight.some(main=>recipes[main].carb)));
   const lunchText = state[index].lunches.map(normalize).join(' ');
   const prefer = id => count(id) + recipes[id].ingredients.filter(([name])=>lunchText.includes(normalize(name))).length
@@ -211,7 +219,11 @@ function renderRoute() {
   book.querySelector('.nav-label').textContent = inBook || inRecipe ? 'Menù della settimana' : 'Ricettario';
   book.querySelector('[aria-hidden]').textContent = inBook || inRecipe ? '📅' : '📖';
   if (inBook) {
-    main.innerHTML = `<div class="view-head"><div class="book-title"><h1>Ricettario</h1><button class="primary" data-new-recipe>＋ Nuova ricetta</button></div></div>${recipeGroups.map(([title,keys]) => `<section class="recipe-group"><h2>${title}</h2><div class="recipes">${keys.map(key => {
+    main.innerHTML = `<div class="view-head"><div class="book-title"><h1>Ricettario</h1><button class="primary" data-new-recipe>＋ Nuova ricetta</button></div></div>
+      <div class="recipe-filters" role="group" aria-label="Filtra per categoria">${['Tutte',...recipeGroups.map(([title])=>title)].map((title,index) => {
+        const value = index===0 ? 'all' : String(index-1);
+        return `<button class="outline" type="button" data-filter="${value}" aria-pressed="${recipeFilter===value}">${title}</button>`;
+      }).join('')}</div>${recipeGroups.map(([title,keys],index) => `<section class="recipe-group" data-recipe-group="${index}" ${recipeFilter==='all' || recipeFilter===String(index) ? '' : 'hidden'}><h2>${title}</h2><div class="recipes">${keys.map(key => {
       const recipe = recipes[key];
       return `<article class="recipe"><h3><span aria-hidden="true">${recipe.icon}</span> ${escaped(recipe.name)}</h3><p>4 persone</p>${ingredients(recipe,4)}<a href="${href(key,4)}">Leggi la preparazione</a></article>`;
     }).join('')}</div></section>`).join('')}`;
@@ -240,6 +252,16 @@ book.addEventListener('click',() => {
 });
 main.addEventListener('click',event => {
   if (event.target.closest('[data-new-recipe]')) openRecipeEditor();
+  const filter = event.target.closest('[data-filter]');
+  if (filter) {
+    recipeFilter = filter.dataset.filter;
+    main.querySelectorAll('[data-filter]').forEach(button => {
+      button.setAttribute('aria-pressed', String(button===filter));
+    });
+    main.querySelectorAll('[data-recipe-group]').forEach(group => {
+      group.hidden = recipeFilter!=='all' && group.dataset.recipeGroup!==recipeFilter;
+    });
+  }
   const dish = event.target.closest('.dish');
   if (dish) weekScroll=scrollY;
   const change = event.target.closest('[data-change]');

@@ -27,7 +27,13 @@ const items = [
  ['cannellini','Fagioli all’uccelletto','🫘','legumi','',[['Cannellini cotti',600,'g'],['Passata di pomodoro',320,'g'],['Aglio',2,'spicchi'],['Salvia',8,'foglie'],['Olio d’oliva',24,'ml'],['Sale',2,'g']],'Scalda olio, aglio e salvia. Versa la passata e falla restringere per dieci minuti. Unisci i cannellini scolati e lascia insaporire a fuoco basso. Regola di sale.'],
  ['orata','Orata al forno','🐟','pesce','',[['Filetti di orata',4,''],['Limone',1,''],['Olio d’oliva',24,'ml'],['Prezzemolo',8,'g'],['Sale',2,'g']],'Disponi i filetti in teglia e condiscili con limone, olio e sale. Cuoci a 190 °C finché il centro raggiunge 63 °C. Guarnisci con prezzemolo.'],
  ['bruschetta','Bruschette al pomodoro','🍅','','pane',[['Pane',8,'fette'],['Pomodori',480,'g'],['Aglio',2,'spicchi'],['Basilico',12,'foglie'],['Olio d’oliva',24,'ml'],['Sale',2,'g']],'Condisci i pomodori a dadini con olio, sale e basilico. Tosta il pane, strofinalo con poco aglio e coprilo con i pomodori.'],
- ['uova','Uova al pomodoro','🍳','uova','',[['Uova',8,''],['Passata di pomodoro',500,'g'],['Olio d’oliva',20,'ml'],['Aglio',1,'spicchio'],['Sale',2,'g']],'Fai insaporire l’olio con l’aglio, aggiungi passata e sale e cuoci per circa dieci minuti. Forma degli spazi nel sugo, sguscia le uova e cuoci con il coperchio fino alla consistenza desiderata.']
+ ['uova','Uova al pomodoro','🍳','uova','',[['Uova',8,''],['Passata di pomodoro',500,'g'],['Olio d’oliva',20,'ml'],['Aglio',1,'spicchio'],['Sale',2,'g']],'Fai insaporire l’olio con l’aglio, aggiungi passata e sale e cuoci per circa dieci minuti. Forma degli spazi nel sugo, sguscia le uova e cuoci con il coperchio fino alla consistenza desiderata.'],
+ ['zucchina-pasta','Pasta e zucchine','🍝','','pasta',[['Pasta corta',320,'g'],['Zucchine',500,'g'],['Aglio',1,'spicchio'],['Olio d’oliva',24,'ml'],['Basilico',8,'foglie'],['Sale',3,'g']],'Affetta le zucchine sottili e saltale in padella con l’olio e l’aglio. Lessa la pasta e mantecala con le zucchine e poca acqua di cottura. Aggiungi il basilico.'],
+ ['tonno-limone','Pasta tonno e limone','🍋','pesce','pasta',[['Pasta',320,'g'],['Tonno sgocciolato',200,'g'],['Limone',1,''],['Olio d’oliva',24,'ml'],['Prezzemolo',8,'g']],'Lessa la pasta. Scalda l’olio con il tonno, aggiungi scorza e succo di limone e un mestolino di acqua di cottura. Salta la pasta nel condimento e completa con il prezzemolo.'],
+ ['pizzaiola-pollo','Pollo alla pizzaiola','🍅','pollo','',[['Petto di pollo',560,'g'],['Passata',400,'g'],['Mozzarella',160,'g'],['Olio d’oliva',24,'ml'],['Origano',2,'g'],['Sale',2,'g']],'Rosola il pollo, unisci passata, sale e origano, quindi copri e completa la cottura fino a 74 °C al centro. Aggiungi la mozzarella a fettine e copri finché fonde.'],
+ ['merluzzo-padella','Merluzzo con pomodorini e olive','🐟','pesce','',[['Filetti di merluzzo',4,''],['Pomodorini',400,'g'],['Olive denocciolate',70,'g'],['Olio d’oliva',24,'ml'],['Aglio',1,'spicchio']],'Fai dorare l’aglio nell’olio. Aggiungi pomodorini e olive e cuoci per qualche minuto. Aggiungi i filetti e cuoci con il coperchio finché si sfaldano e raggiungono 63 °C al centro.'],
+ ['zucchine-trifolate','Zucchine trifolate','🌿','','',[['Zucchine',680,'g'],['Olio d’oliva',24,'ml'],['Aglio',1,'spicchio'],['Prezzemolo',10,'g'],['Sale',2,'g']],'Taglia le zucchine a rondelle. Saltale a fuoco vivace con olio e aglio finché sono tenere e dorate. Sala e completa con prezzemolo tritato.'],
+ ['finocchi-gratinati','Finocchi gratinati','🥬','','',[['Finocchi',720,'g'],['Pangrattato',50,'g'],['Parmigiano',32,'g'],['Olio d’oliva',24,'ml'],['Sale',2,'g']],'Taglia i finocchi a spicchi sottili e sbollentali brevemente. Scolali, disponili in teglia con olio e sale e copri con pangrattato e parmigiano. Gratina a 200 °C fino a doratura.']
 ];
 const gz = slug => 'https://ricette.giallozafferano.it/'+slug+'.html';
 const sources = {
@@ -59,7 +65,13 @@ const sources = {
  cannellini:gz('Fagioli-all-uccelletto'),
  orata:gz('Orata-al-forno'),
  bruschetta:gz('Bruschette-al-pomodoro'),
- uova:gz('Uova-in-purgatorio')
+ uova:gz('Uova-in-purgatorio'),
+ 'zucchina-pasta':gz('Pasta-e-zucchine'),
+ 'tonno-limone':gz('Pasta-tonno-e-limone'),
+ 'pizzaiola-pollo':gz('Pollo-alla-pizzaiola'),
+ 'merluzzo-padella':'https://blog.giallozafferano.it/incucinaperamore/merluzzo-in-padella-con-pomodorini-e-olive/',
+ 'zucchine-trifolate':'https://blog.giallozafferano.it/fornoefornelli/zucchine-trifolate-a-modo-mio/',
+ 'finocchi-gratinati':'https://blog.giallozafferano.it/carmencita81/finocchi-gratinati/'
 };
 export const recipes = Object.fromEntries(items.map(([id,name,icon,protein,carb,ingredients,prep]) =>
  [id,{name,icon,protein,carb,ingredients,prep,source:sources[id]}]));

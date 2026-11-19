@@ -13,3 +13,16 @@
 .dinner-actions{flex:none;display:block}
 @media(max-width:960px){.dinner-actions{align-self:flex-end}}
 @media(max-width:660px){.dinner-actions{align-self:stretch}.dinner-actions .change{width:100%}}
+/* A quick double tap on a control should activate it, while pinch zoom remains available. */
+html,button,a{touch-action:manipulation}
+#book[data-view="week"]{font-size:.86rem;padding-inline:10px;white-space:nowrap}
+#book[data-view="week"] [aria-hidden]{display:none}
+.recipe-filters{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 17px}
+.recipe-filters button{font-size:.9rem}
+.recipe-filters [aria-pressed="true"]{background:var(--green);border-color:var(--green);color:white}
+@media(max-width:660px){
+ #book[data-view="week"]{font-size:.78rem;padding-inline:8px;line-height:1.2}
+ dialog input,dialog textarea,dialog select{font-size:16px!important}
+ .recipe-filters{gap:5px}
+ .recipe-filters button{font-size:.83rem;padding-inline:9px}
+}
