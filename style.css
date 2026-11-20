@@ -34,7 +34,7 @@ html,button,a{touch-action:manipulation}
 #recentWeeks{display:grid;gap:6px;margin-top:12px}#recentWeeks button{text-align:left}
 .archived-lunch{grid-template-columns:84px minmax(0,1fr);cursor:default}.archived-lunch:hover{background:#faf6ed}
 @media(max-width:660px){.history-actions button[data-current-week]{font-size:.8rem;padding-inline:7px}.day .archived-lunch{grid-template-columns:84px minmax(0,1fr)}}
-.brand-actions{display:flex;align-items:center;gap:9px;min-width:0}
+.bar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,auto);column-gap:12px}.brand-actions{display:flex;align-items:center;gap:9px;min-width:0}.brand-actions .brand{white-space:nowrap}.brand-actions .theme-toggle{flex:none}
 .theme-toggle{display:grid;place-items:center;min-width:44px;padding:7px;color:#486152}
 .theme-toggle[aria-pressed="true"]{background:#304838;color:#f4d486;border-color:#57705e}
 :root[data-theme="dark"]{color-scheme:dark;color:#e8efe7;background:#18251e;--green:#a9dfbc;--line:#3e5947;--muted:#becbbf}
@@ -59,9 +59,8 @@ html,button,a{touch-action:manipulation}
 [data-theme="dark"] #recipeError{color:#ffc1a6}
 [data-theme="dark"] :focus-visible{outline-color:#eeb17a}
 [data-theme="dark"] dialog::backdrop{background:#0a130dd0}
-@media(max-width:380px){.brand-actions{gap:6px}.brand{font-size:22px;gap:7px}.brand img{width:34px;height:34px}.brand span{margin-left:-6px}}
+@media(max-width:380px){.brand-actions{gap:6px}.brand{font-size:21px;gap:7px}.brand span{margin-left:-6px}}
 .theme-sun,.theme-toggle[aria-pressed="true"] .theme-moon{display:none}
 .theme-toggle[aria-pressed="true"] .theme-sun{display:block}
 @media(max-width:660px){.theme-toggle[aria-pressed="false"]{background:#f2ecd9;color:#315741;border-color:#d9d1b8}}
-@media(max-width:350px){.bar{gap:5px}.brand{font-size:19px}.brand img{width:28px;height:28px}#book[data-view="week"]{padding-inline:6px;font-size:.75rem}}
-@media(max-width:350px){.brand-actions{flex:none}#book[data-view="week"]{max-width:120px;white-space:normal}}
+@media(max-width:350px){.bar{column-gap:6px}.brand{font-size:19px}#book[data-view="week"]{padding-inline:6px;font-size:.75rem;max-width:120px;white-space:normal}}
