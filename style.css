@@ -60,3 +60,8 @@ html,button,a{touch-action:manipulation}
 [data-theme="dark"] :focus-visible{outline-color:#eeb17a}
 [data-theme="dark"] dialog::backdrop{background:#0a130dd0}
 @media(max-width:380px){.brand-actions{gap:6px}.brand{font-size:22px;gap:7px}.brand img{width:34px;height:34px}.brand span{margin-left:-6px}}
+.theme-sun,.theme-toggle[aria-pressed="true"] .theme-moon{display:none}
+.theme-toggle[aria-pressed="true"] .theme-sun{display:block}
+@media(max-width:660px){.theme-toggle[aria-pressed="false"]{background:#f2ecd9;color:#315741;border-color:#d9d1b8}}
+@media(max-width:350px){.bar{gap:5px}.brand{font-size:19px}.brand img{width:28px;height:28px}#book[data-view="week"]{padding-inline:6px;font-size:.75rem}}
+@media(max-width:350px){.brand-actions{flex:none}#book[data-view="week"]{max-width:120px;white-space:normal}}

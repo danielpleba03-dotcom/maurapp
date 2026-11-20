@@ -1,5 +1,5 @@
-import {recipes} from './recipes.js?v=10';
-import {identifyLunch,indexRecipe,normalize} from './lunch-catalog.js?v=10';
+import {recipes} from './recipes.js?v=11';
+import {identifyLunch,indexRecipe,normalize} from './lunch-catalog.js?v=11';
 
 const family = ['Mauro','Cassandra','Francesca','Lorenzo'];
 const days = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
@@ -274,10 +274,16 @@ function renderWeek() {
 function openHistory() {
   historyDate.value = viewedWeek ?? '';
   document.querySelector('#historyMessage').textContent = '';
-  const keys = Object.keys(ledger.archive).sort().reverse().slice(0,6);
+  const monday = fromKey(ledger.active);
+  const keys = [];
+  for (let i=0;i<2;i++) {
+    monday.setDate(monday.getDate()-7);
+    const key = dateKey(monday);
+    if (Object.hasOwn(ledger.archive,key)) keys.push(key);
+  }
   document.querySelector('#recentWeeks').innerHTML = keys.length
-    ? '<h3>Settimane recenti</h3>'+keys.map(key=>`<button class="outline" type="button" data-open-week="${key}">${weekLabel(key)}</button>`).join('')
-    : '<p>Nessuna settimana passata archiviata su questo dispositivo.</p>';
+    ? '<h3>Ultime due settimane</h3>'+keys.map(key=>`<button class="outline" type="button" data-open-week="${key}">${weekLabel(key)}</button>`).join('')
+    : '<p>Nessun menù archiviato nelle ultime due settimane. Puoi cercare altre date qui sopra.</p>';
   historyDialog.showModal();
 }
 function openArchivedWeek(key) {
@@ -495,6 +501,7 @@ const themeColor = document.querySelector('meta[name="theme-color"]');
 function applyTheme(dark) {
   document.documentElement.dataset.theme = dark ? 'dark' : 'light';
   themeToggle.setAttribute('aria-pressed',String(dark));
+  themeToggle.title = dark ? 'Passa al tema chiaro' : 'Passa al tema scuro';
   themeColor.content = dark ? '#18251e' : '#fffaf2';
 }
 applyTheme(document.documentElement.dataset.theme==='dark');
