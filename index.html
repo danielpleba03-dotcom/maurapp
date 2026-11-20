@@ -2,18 +2,26 @@
 <html lang="it">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#fffaf2"><meta name="description" content="Organizza le cene di Mauro, Francesca, Lorenzo e Cassandra.">
+<meta name="theme-color" content="#fffaf2">
+<script>
+try {
+  if (localStorage.getItem('maurapp-theme') === 'dark') {
+    document.documentElement.dataset.theme = 'dark';
+    document.querySelector('meta[name="theme-color"]').content = '#18251e';
+  }
+} catch {}
+</script><meta name="description" content="Organizza le cene di Mauro, Francesca, Lorenzo e Cassandra.">
 <title>Maurapp · Le cene di famiglia</title>
 <link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="./icon-192.png">
-<link rel="stylesheet" href="./style.css?v=9"><script type="module">
-import('./app.js?v=9').catch(error => {
+<link rel="stylesheet" href="./style.css?v=10"><script type="module">
+import('./app.js?v=10').catch(error => {
   console.error(error);
-  document.querySelector('#main').innerHTML = '<p role="alert">Impossibile caricare il menù. <a href="./?v=9">Riprova</a>.</p>';
+  document.querySelector('#main').innerHTML = '<p role="alert">Impossibile caricare il menù. <a href="./?v=10">Riprova</a>.</p>';
 });
 </script>
 </head>
 <body>
-<header class="top"><div class="bar"><a class="brand" href="#" aria-label="Maurapp, menù della settimana"><img src="./icon.svg" alt="" width="47" height="47">Maurapp<span>.</span></a><button id="book" class="outline"><span aria-hidden="true">📖</span> <span class="nav-label">Ricettario</span></button></div></header>
+<header class="top"><div class="bar"><div class="brand-actions"><a class="brand" href="#" aria-label="Maurapp, menù della settimana"><img src="./icon.svg" alt="" width="47" height="47">Maurapp<span>.</span></a><button id="themeToggle" class="outline theme-toggle" type="button" aria-label="Tema scuro" aria-pressed="false" title="Tema scuro"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 15.1A8.8 8.8 0 0 1 8.9 3.5a8.8 8.8 0 1 0 11.6 11.6Z"/></svg></button></div><button id="book" class="outline"><span aria-hidden="true">📖</span> <span class="nav-label">Ricettario</span></button></div></header>
 <main id="main"><p role="status">Caricamento del menù…</p></main>
 <dialog id="editor"><form id="lunchForm"><div class="dialog-top"><h2 id="editTitle"></h2><button type="button" class="close" aria-label="Chiudi">×</button></div><p id="editDay"></p><label for="lunchInput">Cosa hai mangiato a pranzo?</label><input id="lunchInput" maxlength="180" placeholder="Es. pasta al pomodoro"><p id="lunchMatch" class="lunch-match" aria-live="polite"></p><div class="dialog-actions"><button type="button" class="outline" id="cancel">Annulla</button><button class="primary" type="submit">Salva pranzo</button></div></form></dialog>
 <dialog id="recipeEditor"><form id="recipeForm"><div class="dialog-top"><h2>Nuova ricetta</h2><button type="button" class="close" data-close aria-label="Chiudi">×</button></div><p>Indica gli ingredienti per 4 persone.</p>
@@ -22,7 +30,7 @@ import('./app.js?v=9').catch(error => {
 <fieldset class="ingredients-editor"><legend>Ingredienti</legend><div id="ingredientRows"></div><button type="button" class="outline" id="addIngredient">Aggiungi ingrediente</button></fieldset>
 <label for="recipePrep">Preparazione</label><textarea id="recipePrep" rows="3" maxlength="4000" required></textarea><label for="recipeSource">Link alla fonte (facoltativo)</label><input id="recipeSource" type="url" placeholder="https://…"><p id="recipeError" role="alert"></p>
 <div class="dialog-actions"><button type="button" class="outline" data-close>Annulla</button><button type="submit" class="primary">Salva ricetta</button></div></form></dialog>
-<dialog id="weekHistory"><div class="dialog-top"><h2>Settimane passate</h2><button class="close" type="button" aria-label="Chiudi">×</button></div>
+<dialog id="weekHistory"><div class="dialog-top"><h2>Cerca una settimana</h2><button class="close" type="button" aria-label="Chiudi">×</button></div>
 <form id="historyForm"><label for="historyDate">Data nella settimana da cercare</label><div class="history-search"><input type="date" id="historyDate" required><button class="primary" type="submit">Apri</button></div><p id="historyMessage" role="status"></p></form>
 <div id="recentWeeks"></div></dialog>
 <p id="announce" class="sr" role="status"></p>

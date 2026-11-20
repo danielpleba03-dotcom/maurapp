@@ -34,3 +34,29 @@ html,button,a{touch-action:manipulation}
 #recentWeeks{display:grid;gap:6px;margin-top:12px}#recentWeeks button{text-align:left}
 .archived-lunch{grid-template-columns:84px minmax(0,1fr);cursor:default}.archived-lunch:hover{background:#faf6ed}
 @media(max-width:660px){.history-actions button[data-current-week]{font-size:.8rem;padding-inline:7px}.day .archived-lunch{grid-template-columns:84px minmax(0,1fr)}}
+.brand-actions{display:flex;align-items:center;gap:9px;min-width:0}
+.theme-toggle{display:grid;place-items:center;min-width:44px;padding:7px;color:#486152}
+.theme-toggle[aria-pressed="true"]{background:#304838;color:#f4d486;border-color:#57705e}
+:root[data-theme="dark"]{color-scheme:dark;color:#e8efe7;background:#18251e;--green:#a9dfbc;--line:#3e5947;--muted:#becbbf}
+[data-theme="dark"] .top,[data-theme="dark"] .day,[data-theme="dark"] .recipe,[data-theme="dark"] .prep,[data-theme="dark"] dialog{background:#202f25;color:#edf3ea}
+[data-theme="dark"] .day{box-shadow:0 2px 0 #101a12}
+[data-theme="dark"] .brand{color:#edf3ea}[data-theme="dark"] .brand span{color:#f1a97d}
+[data-theme="dark"] .outline,[data-theme="dark"] .close{background:#273d30;color:#e4f2e5;border-color:#57705e}
+[data-theme="dark"] .theme-toggle[aria-pressed="true"]{background:#344c3a;color:#ffe19b}
+[data-theme="dark"] .outline:hover,[data-theme="dark"] .close:hover{background:#385543}
+[data-theme="dark"] .primary,[data-theme="dark"] .recipe-filters [aria-pressed="true"]{background:#a9dfbc;color:#17251b;border-color:#a9dfbc}
+[data-theme="dark"] .day-mark{color:#fff;background:#635433}
+[data-theme="dark"] .day:nth-child(3n+2) .day-mark{background:#514261}
+[data-theme="dark"] .day:nth-child(3n+3) .day-mark{background:#3c5946}
+[data-theme="dark"] .lunch,[data-theme="dark"] .archived-lunch:hover{background:#332f24;border-color:#584e38;color:#f5ebd9}
+[data-theme="dark"] .lunch:hover{background:#403a2a}
+[data-theme="dark"] .dinner{background:#263e30;border-color:#405e49}
+[data-theme="dark"] .dish{color:#edf5ec}
+[data-theme="dark"] .portions,[data-theme="dark"] .dinner-label{color:#bfd9c5}
+[data-theme="dark"] .change{background:#304b39;color:#e2f2e5;border-color:#5e8168}
+[data-theme="dark"] .change:hover{background:#3e614b}
+[data-theme="dark"] input,[data-theme="dark"] #recipeEditor select,[data-theme="dark"] #recipeEditor textarea{background:#18261e;color:#edf3ea;border-color:#657c6b}
+[data-theme="dark"] #recipeError{color:#ffc1a6}
+[data-theme="dark"] :focus-visible{outline-color:#eeb17a}
+[data-theme="dark"] dialog::backdrop{background:#0a130dd0}
+@media(max-width:380px){.brand-actions{gap:6px}.brand{font-size:22px;gap:7px}.brand img{width:34px;height:34px}.brand span{margin-left:-6px}}

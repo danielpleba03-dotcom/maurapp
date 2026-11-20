@@ -28,6 +28,21 @@ const extraIngredients = {
   verdure:'pak choi,bok choy,cavolo nero,cavolo rapa,cavolo cappuccio,cavolo rosso,cavolo cinese,cime di broccolo,broccoletti,broccolo romano,broccolo romanesco,bietola,coste,cicorino,puntarelle,agretti,barba di frate,ortiche,tarassaco,scarole,friarelli,friarielli,friggitelli,peperoni cruschi,peperone giallo,pomodori secchi,cuore di bue,pomodori datterini,pomodorini datterini,datterini,bietoline,cetriolini,carciofini,cardi,finocchietto,zucca delica,zucca mantovana,zucchine trombetta,zucchine tonde,fiori di zucca,funghi misti,finferli,chiodini,shiitake,maitake,pioppini,portobello,melanzana perlina,songino,lollo,iceberg,romana,belga,julienne di verdure'
 };
 
+const moreIngredients = {
+  pasta:'troccoli,trofiette,tagliolini all uovo,linguine di grano duro,pennette integrali,spaghetti integrali,spaghetti di riso,lasagne verdi,lasagnette,testaroli,panigacci,fregula,fregola,fregola sarda,lorighittas,su filindeu,frascarelli,manfrigoli,passatelli,spoia lorda,marubini,anolini,tordelli,pansoti,pansotti,tortelli maremmani,mezzelune ripiene,gnocchi alla romana,canederli,knodel,culurgionis',
+  riso:'riso vialone,riso nero venere,riso rosso ermes,riso carnaroli integrale,riso vialone nano,riso bomba,riso bomba per paella,riso balilla,riso padano,riso carolina,riso per sushi,riso profumato,riso lungo,riso indiano,riso per risotto,gohan,omurice',
+  pane:'pizza in teglia,pizza in pala,pizza fritta,pizza rossa,pizza bianca,pizza al taglio,montanara,pita greca,lavash,piadina integrale,filoncino,francesino,pane toscano,pane siciliano,pane ai cereali,pan brioche,pan bauletto,semelle,muffuletta,schiacciata toscana,croissant salato,bretzel,piadina di farro',
+  couscous:'fiocchi di farro,fiocchi d avena,fiocchi di orzo,orzo mondo,orzo decorticato,farro perlato,farro monococco,farro dicocco,cous cous integrale,cous cous di mais,cous cous di farro,polenta taragna,polenta bianca,polenta di mais,polenta gialla,granturco,polenta grigliata,burgul,grano spezzato',
+  patate:'patate a pasta gialla,patate rosse,patate ratte,patate americane,patate schiacciate,patate sabbiose,patate hasselback,patate alla lionese,patate al vapore,patate ripiene',
+  manzo:'coppa di maiale,petto di vitello,guanciale di maiale,collo di maiale,spalla di cervo,spiedini di maiale,bresaola della valtellina,lonzino,prosciutto di parma,san daniele,prosciutto di norcia,salame felino,salame napoli,salame ungherese,salsiccia luganega,luganega,salsiccia di bra,pancetta tesa,pancetta arrotolata,zampone,svizzera di manzo,polpettine di carne,rognone,fegato,animelle,frattaglie',
+  pollo:'straccetti di pollo,straccetti di tacchino,suprema di pollo,pollo disossato,cotoletta di tacchino,bocconcini di tacchino,rollata di pollo,confit di anatra,petto di anatra,coscia d anatra,galletti,capponi,gallina lessa,faraona arrosto,petto di quaglia',
+  pesce:'serra,pesce serra,lampuga,suro,merlano,molva,limanda,gallinella di mare,mazzola,mazzoni,coda di rospo,rana pescatrice,pescatrice,grongo,boga,alalunga,tonnetto,ventresca,bottarga,neonata,calamaretti,branzini,orate,merluzzi,occhiate,rombetto,murena,corvina,spatola,alaccia,calamaro ripieno',
+  legumi:'lenticchie corallo,lenticchie decorticate,lenticchie di castelluccio,lenticchie di ustica,ceci di cicerale,ceci di navelli,ceci decorticati,ceci in scatola,borlotti secchi,fagioli toscanelli,fagioli mung,mungo,aduki,soia nera,farina di ceci,farina di lenticchie,farina di piselli,tofu affumicato,tofu vellutato,tofu marinato,tempeh di ceci',
+  uova:'uova di anatra,uova di gallina,uova di oca,omelette al formaggio,omelette alle erbe,frittata al forno,frittata in padella,frittata arrotolata,souffle di uova',
+  latticini:'raspa,pecorino toscano,pecorino fresco,pecorino di fossa,provola affumicata,provola dolce,ricotta di pecora,ricotta vaccina,ricotta salata,tuma,toma piemontese,puzzone di moena,formai de mut,bagoss,gruviera,raclette,stilton,mimolette,munster,edamer,mozzarella di bufala,fiordilatte,fior di latte,primosale vaccino,caprino fresco,robiola di roccaverano,formaggetta,yogurt bianco,crema di latte',
+  verdure:'catalogna spigata,cicoria belga,indivia riccia,radicchio tardivo,radicchio di chioggia,radicchio di treviso,radicchio variegato,radicchio di castelfranco,scarola liscia,scarola riccia,lattuga cappuccina,scarola stufata,cavoletti di bruxelles,cavolo verza,verza viola,cavolo toscano,bietola da costa,bieta rossa,carciofo romanesco,carciofi violetti,carciofo spinoso,asparagi bianchi,asparagi verdi,asparagi selvatici,sedano verde,sedano bianco,cetriolo carosello,barattiere,caroselli,pomodori san marzano,pomodori piccadilly,pomodori ciliegino,ciliegini,pomodorini gialli,zucca butternut,zucca violina,zucca hokkaido,melanzana tonda,melanzana bianca,peperoni corno,peperone crusco,ravanelli bianchi,daikon,rafano,patisson,chayote,funghi finferli,prataioli,ovoli,orecchioni,funghi cardoncelli,cardoncelli'
+};
+
 const dishes = [
  ['carbonara,spaghetti alla carbonara,rigatoni alla carbonara','pasta uova manzo latticini'],
  ['amatriciana,gricia,bucatini all amatriciana','pasta manzo latticini'],
@@ -95,7 +110,47 @@ const dishes = [
  ['pasta alla genovese','pasta manzo verdure'],
  ['pasta al forno,lasagne al forno','pasta latticini'],
  ['sformato di patate,gatto di patate,gatteau di patate','patate latticini'],
- ['uova in purgatorio,uova alla contadina','uova verdure']
+ ['uova in purgatorio,uova alla contadina','uova verdure'],
+ ['pasta e lenticchie,pasta con lenticchie,ditalini con lenticchie','pasta legumi'],
+ ['risotto ai funghi,risotto con funghi,risotto ai porcini,risotto con champignon','riso verdure latticini'],
+ ['pollo alla romana,pollo ai peperoni,pollo alla cacciatora,pollo in umido con verdure','pollo verdure'],
+ ['salmone al limone,salmone alla piastra,salmone in friggitrice ad aria','pesce'],
+ ['frittata di spinaci,frittata di bietole,frittata di asparagi','uova verdure'],
+ ['hummus di ceci,hummus di piselli,hummus di fagioli,hummus di lenticchie','legumi'],
+ ['panzanella toscana,panzanella romana,acquasale,frisella al pomodoro','pane verdure'],
+ ['insalata greca,horiatiki','verdure latticini'],
+ ['riso alla pilota,risotto alla salsiccia','riso manzo'],
+ ['risotto agli spinaci,riso e zucca,risotto ai carciofi,risotto alle zucchine','riso verdure latticini'],
+ ['riso alla cubana','riso uova'],
+ ['fregola con arselle,fregula con arselle,fregola alle vongole','pasta pesce'],
+ ['pasta ai broccoli,orecchiette e broccoli,pasta con i broccoli','pasta verdure'],
+ ['culurgiones di patate,culurgionis di patate','pasta patate latticini'],
+ ['pansoti in salsa di noci,pansotti al sugo di noci','pasta verdure latticini'],
+ ['passatelli in brodo,passatelli asciutti','pasta uova latticini'],
+ ['canederli allo speck','pane uova manzo'],
+ ['canederli agli spinaci','pane uova verdure'],
+ ['lasagne verdi alla bolognese,lasagne alla bolognese','pasta manzo latticini'],
+ ['tagliatelle funghi e speck','pasta verdure manzo'],
+ ['linguine al cartoccio,pasta al pesce spada,paccheri con lo scorfano','pasta pesce'],
+ ['spaghetti con le cozze,fettuccine ai gamberi,linguine ai gamberi','pasta pesce'],
+ ['tramezzino tonno e uova','pane pesce uova'],
+ ['pulled pork,pulled pork sandwich','manzo pane'],
+ ['burrito di fagioli,burrito vegetariano con fagioli','pane legumi'],
+ ['gyros di pollo,kebab di pollo,piadina kebab di pollo','pane pollo'],
+ ['pizza tonno e cipolla,pinsa tonno e cipolla','pane pesce verdure'],
+ ['piadina squacquerone e rucola,piadina stracchino e rucola','pane latticini verdure'],
+ ['salade lyonnaise','verdure uova manzo pane'],
+ ['trota alla mugnaia,sogliola alla mugnaia,orata all acqua pazza','pesce'],
+ ['polpo e patate,insalata di polpo e patate','pesce patate'],
+ ['pasta sarde e finocchietto,pasta con le sarde','pasta pesce verdure'],
+ ['zuppa di cicerchie,zuppa di fave,zuppa di ceci','legumi'],
+ ['fagioli all uccelletto,fagioli alla messicana','legumi verdure'],
+ ['farro con fagioli,insalata di farro e ceci,orzo e ceci','couscous legumi'],
+ ['cavolfiore gratinato,cavolfiore gratinato in friggitrice ad aria','verdure latticini'],
+ ['zucchine ripiene di tonno','verdure pesce'],
+ ['melanzane ripiene di carne,zucchine ripiene di carne','verdure manzo'],
+ ['polenta e baccala,polenta con baccala','couscous pesce'],
+ ['polenta e spezzatino,polenta con salsiccia','couscous manzo']
 ];
 
 export const normalize = value => value.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'').replace(/[^a-z0-9]+/g,' ').trim();
@@ -115,12 +170,13 @@ function add(aliases, groups) {
 }
 Object.entries(catalog).forEach(([group,aliases]) => add(aliases,[group]));
 Object.entries(extraIngredients).forEach(([group,aliases]) => add(aliases,[group]));
+Object.entries(moreIngredients).forEach(([group,aliases]) => add(aliases,[group]));
 dishes.forEach(([aliases,groups]) => add(aliases,groups.split(' ')));
 
 export function indexRecipe(name, categories) {
   add(name,[...new Set(categories.filter(Boolean))]);
 }
-const ignored = new Set('al alla alle allo ai agli di con e o un uno una del dei delle per su nel nella ho mangiato mezza mezzo porzione pezzetto poco poca due tre senza'.split(' '));
+const ignored = new Set('al alla alle allo ai agli di con e o un uno una del dei delle per su nel nella ho mangiato mezza mezzo porzione pezzetto poco poca due tre senza olio sale pepe aceto prezzemolo basilico origano tahina cumino paprika curcuma cannella'.split(' '));
 
 function distance(a,b) {
   let prev = Array.from({length:b.length+1},(_,i)=>i);

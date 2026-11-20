@@ -1,5 +1,5 @@
-const cacheName = 'maurapp-static-v13';
-const assets = ['./','./style.css?v=9','./app.js?v=9','./recipes.js?v=9','./lunch-catalog.js?v=9','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
+const cacheName = 'maurapp-static-v14';
+const assets = ['./','./style.css?v=10','./app.js?v=10','./recipes.js?v=10','./lunch-catalog.js?v=10','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
 
 self.addEventListener('install',event => {
   event.waitUntil(caches.open(cacheName)
@@ -14,7 +14,7 @@ self.addEventListener('activate',event => {
 self.addEventListener('fetch',event => {
   const request = event.request;
   if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return;
-  event.respondWith(fetch(request).catch(async () => {
+  event.respondWith(fetch(request,request.mode === 'navigate' ? {cache:'no-cache'} : undefined).catch(async () => {
     const cache = await caches.open(cacheName);
     return (await cache.match(request)) || (request.mode === 'navigate' ? await cache.match('./') : Response.error());
   }));

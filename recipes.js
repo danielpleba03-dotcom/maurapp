@@ -33,7 +33,18 @@ const items = [
  ['pizzaiola-pollo','Pollo alla pizzaiola','🍅','pollo','',[['Petto di pollo',560,'g'],['Passata',400,'g'],['Mozzarella',160,'g'],['Olio d’oliva',24,'ml'],['Origano',2,'g'],['Sale',2,'g']],'Rosola il pollo, unisci passata, sale e origano, quindi copri e completa la cottura fino a 74 °C al centro. Aggiungi la mozzarella a fettine e copri finché fonde.'],
  ['merluzzo-padella','Merluzzo con pomodorini e olive','🐟','pesce','',[['Filetti di merluzzo',4,''],['Pomodorini',400,'g'],['Olive denocciolate',70,'g'],['Olio d’oliva',24,'ml'],['Aglio',1,'spicchio']],'Fai dorare l’aglio nell’olio. Aggiungi pomodorini e olive e cuoci per qualche minuto. Aggiungi i filetti e cuoci con il coperchio finché si sfaldano e raggiungono 63 °C al centro.'],
  ['zucchine-trifolate','Zucchine trifolate','🌿','','',[['Zucchine',680,'g'],['Olio d’oliva',24,'ml'],['Aglio',1,'spicchio'],['Prezzemolo',10,'g'],['Sale',2,'g']],'Taglia le zucchine a rondelle. Saltale a fuoco vivace con olio e aglio finché sono tenere e dorate. Sala e completa con prezzemolo tritato.'],
- ['finocchi-gratinati','Finocchi gratinati','🥬','','',[['Finocchi',720,'g'],['Pangrattato',50,'g'],['Parmigiano',32,'g'],['Olio d’oliva',24,'ml'],['Sale',2,'g']],'Taglia i finocchi a spicchi sottili e sbollentali brevemente. Scolali, disponili in teglia con olio e sale e copri con pangrattato e parmigiano. Gratina a 200 °C fino a doratura.']
+ ['finocchi-gratinati','Finocchi gratinati','🥬','','',[['Finocchi',720,'g'],['Pangrattato',50,'g'],['Parmigiano',32,'g'],['Olio d’oliva',24,'ml'],['Sale',2,'g']],'Taglia i finocchi a spicchi sottili e sbollentali brevemente. Scolali, disponili in teglia con olio e sale e copri con pangrattato e parmigiano. Gratina a 200 °C fino a doratura.'],
+ ['pasta-lenticchie','Pasta e lenticchie','🥣','legumi','pasta',[['Pasta corta',280,'g'],['Lenticchie cotte',400,'g'],['Carota',100,'g'],['Cipolla',80,'g'],['Passata di pomodoro',180,'g'],['Acqua',800,'ml'],['Olio d’oliva',24,'ml'],['Sale',3,'g']],'Fai appassire carota e cipolla nell’olio. Aggiungi lenticchie, passata e acqua calda. Quando riprende il bollore, cuoci la pasta nello stesso tegame, mescolando e aggiungendo poca acqua se serve.'],
+ ['risotto-funghi','Risotto ai funghi','🍄','latticini','riso',[['Riso Carnaroli',320,'g'],['Funghi champignon',400,'g'],['Brodo vegetale',1050,'ml'],['Scalogno',60,'g'],['Parmigiano',50,'g'],['Olio d’oliva',24,'ml']],'Rosola i funghi affettati, poi mettili da parte. Fai appassire lo scalogno, tosta il riso e versaci il brodo caldo a mestoli. A metà cottura unisci i funghi. Manteca fuori dal fuoco con il parmigiano.'],
+ ['gnocchi-sorrentina','Gnocchi alla sorrentina','🍅','latticini','pasta',[['Gnocchi di patate',800,'g'],['Passata di pomodoro',600,'g'],['Mozzarella',240,'g'],['Parmigiano',40,'g'],['Olio d’oliva',20,'ml'],['Basilico',8,'foglie'],['Aglio',1,'spicchio']],'Rosola l’aglio nell’olio, aggiungi la passata e lascia restringere il sugo. Lessa gli gnocchi e scolali quando salgono a galla. Condiscili e trasferiscili in teglia con mozzarella e parmigiano. Gratina a 220 °C fino a doratura.'],
+ ['frittata-spinaci','Frittata di spinaci','🍳','uova','',[['Uova',8,''],['Spinaci',400,'g'],['Parmigiano',40,'g'],['Olio d’oliva',20,'ml'],['Sale',2,'g']],'Fai appassire gli spinaci in padella e strizzali. Sbatti uova, parmigiano e sale, quindi aggiungi gli spinaci. Cuoci in una padella unta a fuoco medio-basso e girala quando è ben rappresa.'],
+ ['pollo-cacciatora','Pollo alla cacciatora','🍗','pollo','',[['Pollo a pezzi',800,'g'],['Pomodori pelati',420,'g'],['Carota',80,'g'],['Sedano',60,'g'],['Cipolla',80,'g'],['Olio d’oliva',24,'ml'],['Rosmarino',2,'rametti'],['Sale',3,'g']],'Rosola il pollo nell’olio. Unisci le verdure a dadini, rosmarino e pelati. Copri e cuoci a fuoco medio-basso finché il pollo raggiunge 74 °C al centro, aggiungendo acqua se il fondo si asciuga.'],
+ ['salmone-aria','Salmone in friggitrice ad aria','🐟','pesce','',[['Filetti di salmone',4,''],['Olio d’oliva',20,'ml'],['Limone',1,''],['Prezzemolo',8,'g'],['Sale',2,'g']],'Asciuga i filetti e condiscili con olio e sale. Cuocili nel cestello in un solo strato a 180 °C finché il centro raggiunge 63 °C. Completa con limone e prezzemolo.'],
+ ['insalata-greca','Insalata greca','🥗','latticini','',[['Feta',320,'g'],['Pomodori',400,'g'],['Cetrioli',300,'g'],['Cipolla rossa',80,'g'],['Olive nere',80,'g'],['Olio d’oliva',24,'ml'],['Origano',2,'g']],'Taglia pomodori, cetrioli e cipolla. Unisci le olive e la feta a cubetti. Condisci con olio e origano.'],
+ ['melanzane-funghetto','Melanzane a funghetto','🍆','','',[['Melanzane',640,'g'],['Pomodorini',280,'g'],['Olio d’oliva',32,'ml'],['Aglio',2,'spicchi'],['Basilico',8,'foglie'],['Sale',2,'g']],'Rosola le melanzane a cubetti in padella con olio e aglio, in più riprese se serve. Unisci i pomodorini a metà e cuoci finché sono morbidi. Sala e aggiungi il basilico.'],
+ ['cavolfiore-aria','Cavolfiore gratinato in friggitrice ad aria','🥬','','',[['Cavolfiore',720,'g'],['Olio d’oliva',24,'ml'],['Pangrattato',48,'g'],['Parmigiano',30,'g'],['Sale',2,'g']],'Dividi il cavolfiore in piccole cimette e condiscile con olio, pangrattato, parmigiano e sale. Cuoci a 180 °C in un solo strato finché è tenero e dorato, scuotendo il cestello a metà.'],
+ ['hummus','Hummus di ceci','🫘','legumi','',[['Ceci cotti scolati',460,'g'],['Tahina',45,'g'],['Succo di limone',45,'ml'],['Olio d’oliva',20,'ml'],['Acqua',60,'ml'],['Aglio',1,'spicchio'],['Sale',2,'g']],'Frulla ceci, tahina, limone, aglio e sale. Aggiungi acqua poco alla volta fino a ottenere una crema liscia. Servi con un filo d’olio.'],
+ ['panzanella','Panzanella','🍅','','pane',[['Pane raffermo',240,'g'],['Pomodori',460,'g'],['Cetrioli',260,'g'],['Cipolla rossa',80,'g'],['Aceto di vino',28,'ml'],['Olio d’oliva',24,'ml'],['Basilico',8,'foglie'],['Sale',2,'g']],'Ammorbidisci il pane con poca acqua e strizzalo. Taglia pomodori, cetrioli e cipolla. Mescola con pane, olio, aceto, sale e basilico, poi fai riposare in frigorifero prima di servire.']
 ];
 const gz = slug => 'https://ricette.giallozafferano.it/'+slug+'.html';
 const sources = {
@@ -71,7 +82,18 @@ const sources = {
  'pizzaiola-pollo':gz('Pollo-alla-pizzaiola'),
  'merluzzo-padella':'https://blog.giallozafferano.it/incucinaperamore/merluzzo-in-padella-con-pomodorini-e-olive/',
  'zucchine-trifolate':'https://blog.giallozafferano.it/fornoefornelli/zucchine-trifolate-a-modo-mio/',
- 'finocchi-gratinati':'https://blog.giallozafferano.it/carmencita81/finocchi-gratinati/'
+ 'finocchi-gratinati':'https://blog.giallozafferano.it/carmencita81/finocchi-gratinati/',
+ 'pasta-lenticchie':gz('Pasta-e-lenticchie'),
+ 'risotto-funghi':gz('Risotto-ai-funghi'),
+ 'gnocchi-sorrentina':gz('Gnocchi-alla-sorrentina'),
+ 'frittata-spinaci':gz('Frittata-di-spinaci'),
+ 'pollo-cacciatora':gz('Pollo-alla-cacciatora'),
+ 'salmone-aria':'https://www.cucchiaio.it/ricetta/salmone-friggitrice-aria/',
+ 'insalata-greca':gz('Insalata-greca'),
+ 'melanzane-funghetto':gz('Melanzane-a-funghetto'),
+ 'cavolfiore-aria':'https://blog.giallozafferano.it/cucinoperpassione/ricetta-cavolfiore-gratinato-in-friggitrice-ad-aria/',
+ hummus:gz('Hummus'),
+ panzanella:gz('Panzanella')
 };
 export const recipes = Object.fromEntries(items.map(([id,name,icon,protein,carb,ingredients,prep]) =>
  [id,{name,icon,protein,carb,ingredients,prep,source:sources[id]}]));

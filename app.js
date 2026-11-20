@@ -1,22 +1,22 @@
-import {recipes} from './recipes.js?v=9';
-import {identifyLunch,indexRecipe,normalize} from './lunch-catalog.js?v=9';
+import {recipes} from './recipes.js?v=10';
+import {identifyLunch,indexRecipe,normalize} from './lunch-catalog.js?v=10';
 
 const family = ['Mauro','Cassandra','Francesca','Lorenzo'];
 const days = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
 const dayIcons = ['🌿','☀️','🥕','🍋','⭐','🌼','🧡'];
-const mains = ['pollo','riso','frittata','manzo','pesce','burger','pasta','piadina','ceci','farfalle','pesto','couscous','tacchino','salmone','piselli','zucca','limone','lentiche','cannellini','orata','uova','caprese','zucchina-pasta','tonno-limone','pizzaiola-pollo','merluzzo-padella'];
-const sides = ['verdure','insalata','fagiolini','broccoli','patate','carote','bruschetta','zucchine-trifolate','finocchi-gratinati'];
+const mains = ['pollo','riso','frittata','manzo','pesce','burger','pasta','piadina','ceci','farfalle','pesto','couscous','tacchino','salmone','piselli','zucca','limone','lentiche','cannellini','orata','uova','caprese','zucchina-pasta','tonno-limone','pizzaiola-pollo','merluzzo-padella','pasta-lenticchie','risotto-funghi','gnocchi-sorrentina','frittata-spinaci','pollo-cacciatora','salmone-aria','insalata-greca'];
+const sides = ['verdure','insalata','fagiolini','broccoli','patate','carote','bruschetta','zucchine-trifolate','finocchi-gratinati','melanzane-funghetto','cavolfiore-aria','hummus','panzanella'];
 const recipeGroups = [
-  ['Primi',['pasta','farfalle','pesto','riso','couscous','piselli','zucca','lentiche','zucchina-pasta','tonno-limone']],
-  ['Secondi',['manzo','pollo','tacchino','pesce','salmone','frittata','burger','limone','cannellini','orata','uova','caprese','pizzaiola-pollo','merluzzo-padella']],
-  ['Contorni ed altro',['verdure','insalata','fagiolini','broccoli','patate','piadina','ceci','carote','bruschetta','zucchine-trifolate','finocchi-gratinati']]
+  ['Primi',['pasta','farfalle','pesto','riso','couscous','piselli','zucca','lentiche','zucchina-pasta','tonno-limone','pasta-lenticchie','risotto-funghi','gnocchi-sorrentina']],
+  ['Secondi',['manzo','pollo','tacchino','pesce','salmone','frittata','burger','limone','cannellini','orata','uova','caprese','pizzaiola-pollo','merluzzo-padella','frittata-spinaci','pollo-cacciatora','salmone-aria','insalata-greca']],
+  ['Contorni ed altro',['verdure','insalata','fagiolini','broccoli','patate','piadina','ceci','carote','bruschetta','zucchine-trifolate','finocchi-gratinati','melanzane-funghetto','cavolfiore-aria','hummus','panzanella']]
 ];
 const legacySplit = 'pesce-riso';
 const splitWork = {
-  rapido:['manzo','tacchino','burger','limone','caprese','piadina'],
-  fornello:['riso','pasta','farfalle','pesto','piselli','zucca','uova','cannellini','frittata','couscous','zucchina-pasta','tonno-limone','pizzaiola-pollo','merluzzo-padella'],
-  forno:['salmone','orata','ceci'],
-  aria:['pesce','pollo']
+  rapido:['manzo','tacchino','burger','limone','caprese','piadina','insalata-greca'],
+  fornello:['riso','pasta','farfalle','pesto','piselli','zucca','uova','cannellini','frittata','couscous','zucchina-pasta','tonno-limone','pizzaiola-pollo','merluzzo-padella','pasta-lenticchie','risotto-funghi','frittata-spinaci'],
+  forno:['salmone','orata','ceci','gnocchi-sorrentina'],
+  aria:['pesce','pollo','salmone-aria']
 };
 const methods = Object.fromEntries(Object.entries(splitWork).flatMap(([method,keys])=>keys.map(key=>[key,method])));
 const pairs = Object.keys(methods).flatMap(a=>Object.keys(methods).filter(b =>
@@ -195,9 +195,10 @@ function setDinner(index,key) {
   const offset = index % sides.length;
   const mainsTonight = dinnerParts(key);
   const usesOven = mainsTonight.some(id=>methods[id]==='forno');
+  const stoveBusy = mainsTonight.includes('pollo-cacciatora');
   const usesAir = mainsTonight.some(id=>methods[id]==='aria');
   const rankedSides = [...sides.slice(offset),...sides.slice(0,offset)].filter(id =>
-    !(['verdure','finocchi-gratinati'].includes(id) && usesOven) && !(id==='patate' && usesAir) &&
+    !(stoveBusy && id==='melanzane-funghetto') && !(['verdure','finocchi-gratinati'].includes(id) && usesOven) && !(['patate','cavolfiore-aria'].includes(id) && usesAir) &&
     !(recipes[id].carb && mainsTonight.some(main=>recipes[main].carb)));
   const lunchText = state[index].lunches.map(normalize).join(' ');
   const prefer = id => count(id) + recipes[id].ingredients.filter(([name])=>lunchText.includes(normalize(name))).length
@@ -271,27 +272,24 @@ function renderWeek() {
   <div class="week">${days.map((day,i) => `<article class="day" id="day-${i}"><div class="day-head"><span class="day-mark" aria-hidden="true">${dayIcons[i]}</span><h3>${day}</h3>${!archived && today===i ? '<span class="current">Oggi</span>' : ''}</div><div class="lunches">${lunchButton(i,0,menu[i],archived)}${lunchButton(i,1,menu[i],archived)}</div><div class="dinner"><div class="dinner-content"><div class="dinner-label">${archived ? 'Cena' : 'Cena proposta'}</div><div class="meals">${dinnerMarkup(menu[i])}</div></div>${archived ? '' : `<div class="dinner-actions"><button class="change" data-change="${i}" aria-label="Altra proposta, ${day}"><span aria-hidden="true">⟳</span> Altra proposta</button></div>`}</div></article>`).join('')}</div>`;
 }
 function openHistory() {
-  const previous = fromKey(ledger.active);
-  previous.setDate(previous.getDate()-1);
-  historyDate.max = dateKey(previous);
   historyDate.value = viewedWeek ?? '';
   document.querySelector('#historyMessage').textContent = '';
   const keys = Object.keys(ledger.archive).sort().reverse().slice(0,6);
   document.querySelector('#recentWeeks').innerHTML = keys.length
     ? '<h3>Settimane recenti</h3>'+keys.map(key=>`<button class="outline" type="button" data-open-week="${key}">${weekLabel(key)}</button>`).join('')
-    : '<p>Le settimane appariranno qui dopo il cambio del lunedì.</p>';
+    : '<p>Nessuna settimana passata archiviata su questo dispositivo.</p>';
   historyDialog.showModal();
 }
 function openArchivedWeek(key) {
-  if(!Object.hasOwn(ledger.archive,key)) {
-    document.querySelector('#historyMessage').textContent = 'Nessun menù salvato per questa settimana.';
+  if(key!==ledger.active && !Object.hasOwn(ledger.archive,key)) {
+    document.querySelector('#historyMessage').textContent = 'Nessun menù salvato per la settimana '+weekLabel(key)+'.';
     return;
   }
-  viewedWeek = key;
+  viewedWeek = key===ledger.active ? null : key;
   weekScroll = 0;
   historyDialog.close();
   renderRoute();
-  main.querySelector('[data-current-week]').focus();
+  main.querySelector(viewedWeek ? '[data-current-week]' : '[data-history]').focus();
 }
 historyDialog.querySelector('.close').onclick = () => historyDialog.close();
 document.querySelector('#historyForm').addEventListener('submit',event => {
@@ -492,4 +490,24 @@ setInterval(checkCalendar,15000);
 dialog.addEventListener('close',checkCalendar);
 historyDialog.addEventListener('close',checkCalendar);
 renderRoute();
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+const themeToggle = document.querySelector('#themeToggle');
+const themeColor = document.querySelector('meta[name="theme-color"]');
+function applyTheme(dark) {
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  themeToggle.setAttribute('aria-pressed',String(dark));
+  themeColor.content = dark ? '#18251e' : '#fffaf2';
+}
+applyTheme(document.documentElement.dataset.theme==='dark');
+themeToggle.addEventListener('click',() => {
+  const dark = document.documentElement.dataset.theme!=='dark';
+  applyTheme(dark);
+  try { localStorage.setItem('maurapp-theme',dark ? 'dark' : 'light'); } catch {}
+});
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(registration => {
+    document.addEventListener('visibilitychange',() => {
+      if (!document.hidden && navigator.onLine) registration.update().catch(()=>{});
+    });
+  }).catch(()=>{});
+}
