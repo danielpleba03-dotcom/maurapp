@@ -153,6 +153,52 @@ const dishes = [
  ['polenta e spezzatino,polenta con salsiccia','couscous manzo']
 ];
 
+const familyLunchAliases = [
+ ['pennette al gorgonzola,mezze maniche al gorgonzola,pasta alla crema di gorgonzola,gnocchi ai quattro formaggi,pasta burro e parmigiano,spaghetti con robiola','pasta latticini'],
+ ['pasta con borlotti,pasta con cannellini,ditalini e cannellini,minestra di pasta e fagioli,ditalini ai ceci,tagliatelle e ceci','pasta legumi'],
+ ['mezze penne al tonno,bucatini con tonno e olive,pasta con sgombro,spaghetti con acciughe,pasta con salmone affumicato,farfalle al salmone,pasta con la bottarga','pasta pesce'],
+ ['pasta mista con patate,ditalini con patate,pasta con patate e provola','pasta patate'],
+ ['pasta e patate con provola','pasta patate latticini'],
+ ['penne alla vodka,pasta panna e prosciutto,tortellini panna e prosciutto','pasta latticini manzo'],
+ ['pappardelle al cinghiale,pappardelle al ragu di lepre','pasta manzo'],
+ ['bigoli con l anatra,bigoli all anatra,bigoli al ragu d anatra','pasta pollo'],
+ ['bigoli in salsa,bucatini alle acciughe','pasta pesce'],
+ ['spaghetti all assassina,penne alla puttanesca,sugo alla marinara','pasta verdure'],
+ ['pizzoccheri della valtellina,pizzoccheri con verza','pasta patate verdure latticini'],
+ ['gnocchi alla bava,gnocchetti al taleggio,gnocchi con fonduta','pasta latticini'],
+ ['polenta con formaggio,polenta e gorgonzola,polenta e taleggio,polenta e latte','couscous latticini'],
+ ['polenta con funghi,polenta e porcini,polenta ai funghi','couscous verdure'],
+ ['risotto provola e radicchio,risotto alla crema di parmigiano,riso al grana,risotto allo zafferano e parmigiano','riso latticini'],
+ ['riso nero con gamberi,risotto alle vongole,risotto con capesante,risotto agli scampi','riso pesce'],
+ ['riso e fagioli,riso con fagioli neri,frijoles con arroz','riso legumi'],
+ ['uova strapazzate al pomodoro,occhio di bue con spinaci,uovo al tegamino con spinaci,shakshuka con pomodori','uova verdure'],
+ ['uova strapazzate al formaggio,uova strapazzate con ricotta','uova latticini'],
+ ['frittata ai funghi,omelette agli champignon,omelette ai funghi,frittatina agli asparagi','uova verdure'],
+ ['frittata con patate,frittata di patate senza forno','uova patate'],
+ ['scaloppine di vitello al limone,scaloppine di vitello ai funghi,scaloppine di maiale,saltimbocca alla romana,involtini di vitello,ragù di vitello,tagliata di fassona','manzo'],
+ ['pollo al marsala,pollo ai funghi,pollo alla senape,pollo alla paprika,pollo in tegame,pollo alla birra,involtini di pollo,straccetti di tacchino al limone,tacchino alla piastra','pollo'],
+ ['spezzatino di pollo con patate,tacchino con patate','pollo patate'],
+ ['straccetti di manzo alla rucola,bistecca con rucola,tagliata con rucola e pomodorini,polpette di manzo al pomodoro','manzo verdure'],
+ ['orata all acqua pazza,spigola all acqua pazza,branzino all acqua pazza,ombrina all acqua pazza','pesce verdure'],
+ ['orata al cartoccio,branzino al cartoccio,trota al cartoccio,cartoccio di salmone,merluzzo al cartoccio,trancio di tonno alla griglia','pesce'],
+ ['acciughe marinate,sarde grigliate,sgombro sott olio,merluzzo al vapore,merluzzo gratinato,limanda panata,spigola alla mediterranea,orata alla griglia,branzino al sale','pesce'],
+ ['sogliola con patate,merluzzo e patate,baccala e patate,baccala con patate','pesce patate'],
+ ['tonno e ceci,insalata di fagioli e tonno,insalata di cannellini e tonno','pesce legumi'],
+ ['cavolo nero stufato,spinaci saltati,spinaci all aglio,bietole ripassate,bietole saltate,erbette in padella,carciofi trifolati,puntarelle all aglio,finocchi a fettine,peperoni stufati,peperoni in agrodolce,peperoni grigliati,cipolle gratinate,cipolle in agrodolce,carote alla julienne,fagiolini lessi,broccoli al vapore','verdure'],
+ ['vellutata di zucchine,vellutata di porri e patate,vellutata di zucchine e patate','verdure patate'],
+ ['crema di finocchi,crema di carciofi,vellutata di sedano rapa,vellutata di cavolo nero,vellutata di funghi','verdure'],
+ ['baba ganoush con crostini,hummus e pane,pane e hummus,cecina nel panino','pane legumi'],
+ ['puccia con prosciutto,tigelle con salame,crescentina con prosciutto,sandwich al roast beef','pane manzo'],
+ ['toast al formaggio,toast alla mozzarella,crostini alla ricotta,crostini al gorgonzola,focaccia di recco','pane latticini'],
+ ['toast prosciutto e formaggio,toast con prosciutto e mozzarella,panino prosciutto e mozzarella','pane manzo latticini'],
+ ['toast al salmone,crostini con salmone,crostini di sgombro','pane pesce'],
+ ['piadina con frittata,sandwich alle uova','pane uova'],
+ ['insalata di farro col tonno,farro al tonno,farro con salmone','couscous pesce'],
+ ['farro con ceci e verdure,orzo con lenticchie,farro e lenticchie,cous cous con lenticchie','couscous legumi'],
+ ['minestra di farro e verdure,orzo con verdure,cous cous con melanzane','couscous verdure'],
+ ['insalata di ceci e verdure,ceci in insalata,lenticchie in umido,piselli stufati,cannellini alla salvia,zuppa di borlotti e verdure','legumi']
+];
+
 export const normalize = value => value.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'').replace(/[^a-z0-9]+/g,' ').trim();
 const entries = new Map();
 const byLength = new Map();
@@ -172,6 +218,7 @@ Object.entries(catalog).forEach(([group,aliases]) => add(aliases,[group]));
 Object.entries(extraIngredients).forEach(([group,aliases]) => add(aliases,[group]));
 Object.entries(moreIngredients).forEach(([group,aliases]) => add(aliases,[group]));
 dishes.forEach(([aliases,groups]) => add(aliases,groups.split(' ')));
+familyLunchAliases.forEach(([aliases,groups]) => add(aliases,groups.split(' ')));
 
 export function indexRecipe(name, categories) {
   add(name,[...new Set(categories.filter(Boolean))]);
@@ -209,7 +256,9 @@ function fuzzy(phrase,count) {
   return bestDistance<=limit && !ambiguous ? best : undefined;
 }
 
-export function identifyLunch(value) {
+export function catalogSize() { return entries.size; }
+
+export function identifyLunch(value,allowFuzzy = true) {
   const tokens=normalize(value).split(' ').filter(Boolean);
   const groups=new Set();
   const corrections=new Set();
@@ -225,7 +274,7 @@ export function identifyLunch(value) {
       const result=entries.get(phrase);
       if(result){match={groups:result};consumed=count;break;}
     }
-    if(!match) {
+    if(!match && allowFuzzy) {
       for(let count=Math.min(5,tokens.length-i);count>0;count--) {
         const chunk=tokens.slice(i,i+count);
         if(chunk.includes('senza') || ignored.has(chunk.at(-1))) continue;
