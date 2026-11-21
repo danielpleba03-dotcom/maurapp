@@ -1,8 +1,8 @@
-import {recipes} from './recipes.js?v=13';
-import {identifyLunch,indexRecipe,normalize,catalogSize} from './lunch-catalog.js?v=13';
-import {cycleStart,firstSchoolWeek,schoolWeeks,mauroLunches,previousMauroLunches,mauroDinners,previewRecipes} from './family-plan.js?v=13';
-import {extraRecipes} from './more-recipes.js?v=13';
-import {sourceRecipes} from './source-recipes.js?v=13';
+import {recipes} from './recipes.js?v=14';
+import {identifyLunch,indexRecipe,normalize,catalogSize} from './lunch-catalog.js?v=14';
+import {cycleStart,firstSchoolWeek,schoolWeeks,mauroLunches,previousMauroLunches,mauroDinners,previewRecipes} from './family-plan.js?v=14';
+import {extraRecipes} from './more-recipes.js?v=14';
+import {sourceRecipes} from './source-recipes.js?v=14';
 
 Object.assign(recipes,previewRecipes,extraRecipes);
 const now = () => new Date();
@@ -110,6 +110,7 @@ const announce = document.querySelector('#announce');
 let ledger = readWeeks();
 let state = ledger.days;
 let viewedWeek = null;
+let visibleMenu;
 let editing;
 let lunchTrigger;
 let weekScroll=0;
@@ -367,7 +368,11 @@ function rollWeek() {
     if(latest.active===ledger.active) ledger=latest;
     ledger.archive[ledger.active]=ledger.days;
     ledger.active=current;
-    ledger.days=emptyWeek(current);
+    ledger.days=ledger.upcoming?.[current] ?? emptyWeek(current);
+    for (const [date,menu] of Object.entries(ledger.upcoming ?? {})){
+      if(date<current) ledger.archive[date]=menu;
+      if(date<=current) delete ledger.upcoming[date];
+    }
     state=ledger.days;
     initializeWeek();
     save();
@@ -450,7 +455,7 @@ function futureMenu(key) {
   const upcoming=emptyWeek(key);
   try {
     state=upcoming;
-    upcoming.forEach((_,index)=>choose(index));
+    upcoming.forEach((day,index)=>{choose(index);day.planVersion=1;});
   } finally {
     state=active;
   }
@@ -460,13 +465,13 @@ function renderWeek() {
   const selected=viewedWeek ?? ledger.active;
   const current=selected===ledger.active;
   const upcoming=selected>ledger.active;
-  const menu=current ? state : upcoming ? futureMenu(selected) : ledger.archive[selected];
-  const readOnly=!current;
+  const menu=current ? state : upcoming ? ledger.upcoming?.[selected] ?? futureMenu(selected) : ledger.archive[selected];
+  visibleMenu=menu;
   const title=current ? 'Menù della settimana' : upcoming ? 'Menù previsto' : 'Menù archiviato';
   const today = (now().getDay()+6)%7;
   const calendar = '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18m-13 5h2m4 0h2"/></svg>';
-  main.innerHTML = `<div class="section-head"><div><h1 class="section-title">${title}</h1><p class="week-dates">${weekLabel(selected)}</p></div><div class="history-actions">${readOnly ? '<button class="outline" data-current-week>Settimana attuale</button>' : ''}<div class="week-nav"><button class="outline calendar-button week-arrow" data-week-step="-1" aria-label="Settimana precedente" title="Settimana precedente">&lt;</button><button class="outline calendar-button" data-history aria-label="Settimane passate" title="Settimane passate">${calendar}</button><button class="outline calendar-button week-arrow" data-week-step="1" aria-label="Settimana successiva" title="Settimana successiva">&gt;</button></div></div></div>
-  <div class="week">${menu ? days.map((day,i) => `<article class="day" id="day-${i}"><div class="day-head"><span class="day-mark" aria-hidden="true">${dayIcons[i]}</span><h3>${day}</h3>${current && today===i ? '<span class="current">Oggi</span>' : ''}</div><div class="lunches">${lunchButton(i,0,menu[i],readOnly)}${lunchButton(i,1,menu[i],readOnly,selected)}${lunchButton(i,2,menu[i],readOnly)}</div><div class="dinner${readOnly ? '' : ' dinner-editable'}"><div class="dinner-content"><div class="meals">${dinnerMarkup(menu[i])}</div></div>${readOnly ? '' : `<div class="dinner-actions"><button class="change" ${menu[i].eaten ? 'hidden' : ''} data-change="${i}" aria-label="Altra proposta, ${day}"><span aria-hidden="true">⟳</span> Altra proposta</button></div><button type="button" class="dinner-edit outline" data-edit-dinner="${i}" aria-label="Modifica cena, ${day}" title="Modifica cena">✎</button>`}</div></article>`) .join('') : '<p class="week-unavailable">Nessun menù salvato per questa settimana.</p>'}</div>`;
+  main.innerHTML = `<div class="section-head"><div><h1 class="section-title">${title}</h1><p class="week-dates">${weekLabel(selected)}</p></div><div class="history-actions">${!current ? '<button class="outline" data-current-week>Settimana attuale</button>' : ''}<div class="week-nav"><button class="outline calendar-button week-arrow" data-week-step="-1" aria-label="Settimana precedente" title="Settimana precedente">&lt;</button><button class="outline calendar-button" data-history aria-label="Settimane passate" title="Settimane passate">${calendar}</button><button class="outline calendar-button week-arrow" data-week-step="1" aria-label="Settimana successiva" title="Settimana successiva">&gt;</button></div></div></div>
+  <div class="week">${menu ? days.map((day,i) => `<article class="day" id="day-${i}"><div class="day-head"><span class="day-mark" aria-hidden="true">${dayIcons[i]}</span><h3>${day}</h3>${current && today===i ? '<span class="current">Oggi</span>' : ''}</div><div class="lunches">${lunchButton(i,0,menu[i],false,selected)}${lunchButton(i,1,menu[i],false,selected)}${lunchButton(i,2,menu[i],false,selected)}</div><div class="dinner dinner-editable"><div class="dinner-content"><div class="meals">${dinnerMarkup(menu[i])}</div></div><div class="dinner-actions"><button class="change" ${menu[i].eaten ? 'hidden' : ''} data-change="${i}" aria-label="Altra proposta, ${day}"><span aria-hidden="true">⟳</span> Altra proposta</button></div><button type="button" class="dinner-edit outline" data-edit-dinner="${i}" aria-label="Modifica cena, ${day}" title="Modifica cena">✎</button></div></article>`) .join('') : '<div class="week-unavailable"><p>Nessun menù salvato per questa settimana.</p><button type="button" class="outline" data-create-past-week>Crea menù</button></div>'}</div>`;
 }
 function openHistory() {
   historyDate.value = viewedWeek ?? '';
@@ -484,7 +489,7 @@ function openHistory() {
   historyDialog.showModal();
 }
 function openArchivedWeek(key) {
-  if(key!==ledger.active && !Object.hasOwn(ledger.archive,key)) {
+  if(key<ledger.active && !Object.hasOwn(ledger.archive,key)) {
     document.querySelector('#historyMessage').textContent = 'Nessun menù salvato per la settimana '+weekLabel(key)+'.';
     return;
   }
@@ -559,12 +564,28 @@ function renderRoute() {
 }
 function refreshDinner(index) {
   const meals = document.querySelector('#day-'+index+' .meals');
-  meals.innerHTML = dinnerMarkup(state[index]);
-  document.querySelector(`[data-change="${index}"]`).hidden=Boolean(state[index].eaten);
+  meals.innerHTML = dinnerMarkup(visibleMenu[index]);
+  document.querySelector(`[data-change="${index}"]`).hidden=Boolean(visibleMenu[index].eaten);
   meals.classList.remove('fresh');
   requestAnimationFrame(() => meals.classList.add('fresh'));
 }
+function keepVisibleMenu() {
+  if (viewedWeek>ledger.active) {
+    ledger.upcoming ??= {};
+    ledger.upcoming[viewedWeek]=visibleMenu;
+  }
+}
+function chooseForVisibleWeek(index,alternate = false) {
+  const active=state;
+  try {
+    state=visibleMenu;
+    choose(index,alternate);
+  } finally {
+    state=active;
+  }
+}
 function report(message) {
+  keepVisibleMenu();
   announce.textContent = save() ? message : message+' Il browser non ha consentito il salvataggio.';
 }
 book.addEventListener('click',() => {
@@ -572,6 +593,13 @@ book.addEventListener('click',() => {
   location.hash = book.dataset.view === 'week' ? '' : 'ricettario';
 });
 main.addEventListener('click',event => {
+  if(event.target.closest('[data-create-past-week]')){
+    ledger.archive[viewedWeek]=futureMenu(viewedWeek);
+    save();
+    renderRoute();
+    main.querySelector('[data-edit-dinner]')?.focus();
+    return;
+  }
   const step=event.target.closest('[data-week-step]');
   if(step){
     const date=fromKey(viewedWeek ?? ledger.active);
@@ -593,7 +621,7 @@ main.addEventListener('click',event => {
   if(remove){
     const index=Number(remove.dataset.day);
     const person=Number(remove.dataset.person);
-    const items=lunchItems(state[index].lunches[person] ?? '');
+    const items=lunchItems(visibleMenu[index].lunches[person] ?? '');
     items.splice(Number(remove.dataset.removeLunch),1);
     focusLunchEditor(updateLunch(index,person,items.join(', '))).focus();
     return;
@@ -620,8 +648,8 @@ main.addEventListener('click',event => {
   const change = event.target.closest('[data-change]');
   if (change) {
     const index = Number(change.dataset.change);
-    state[index].turn = (state[index].turn ?? 0)+1;
-    choose(index,true);
+    visibleMenu[index].turn=(visibleMenu[index].turn ?? 0)+1;
+    chooseForVisibleWeek(index,true);
     refreshDinner(index);
     report('Nuova cena per '+days[index]+'.');
   }
@@ -632,7 +660,7 @@ main.addEventListener('click',event => {
     const [index,person] = editing;
     document.querySelector('#editTitle').textContent = 'Pranzo di '+family[person];
     document.querySelector('#editDay').textContent = days[index];
-    const value = state[index].lunches[person] ?? '';
+    const value = visibleMenu[index].lunches[person] ?? '';
     lunchRows.replaceChildren();
     const items=lunchItems(value);
     (items.length ? items : ['']).forEach(addLunchRow);
@@ -646,11 +674,12 @@ dialog.querySelector('.close').onclick = () => dialog.close();
 document.querySelector('#cancel').onclick = () => dialog.close();
 dialog.addEventListener('close',() => lunchTrigger?.focus());
 function updateLunch(index,person,value) {
-  if (state[index].categories) state[index].categories[person] = null;
-  state[index].lunches[person] = value;
-  choose(index);
+  const day=visibleMenu[index];
+  if (day.categories) day.categories[person]=null;
+  day.lunches[person]=value;
+  chooseForVisibleWeek(index);
   const template = document.createElement('template');
-  template.innerHTML = lunchButton(index,person);
+  template.innerHTML = lunchButton(index,person,day,false,viewedWeek ?? ledger.active);
   const updated = template.content.firstElementChild;
   const current = main.querySelector(`[data-card-day="${index}"][data-lunch-card="${person}"]`);
   current.replaceWith(updated);
@@ -662,7 +691,7 @@ document.querySelector('#lunchForm').addEventListener('submit',event => {
   event.preventDefault();
   const [index,person] = editing;
   const value = lunchEditorValue();
-  if (value !== state[index].lunches[person]) {
+  if (value !== visibleMenu[index].lunches[person]) {
     const updated=updateLunch(index,person,value);
     lunchTrigger=focusLunchEditor(updated);
   }
@@ -680,7 +709,7 @@ function proposedDinners(day) {
 }
 function openDinnerEditor(index) {
   dinnerIndex=index;
-  dinnerDraft=structuredClone(state[index].eaten ?? proposedDinners(state[index]));
+  dinnerDraft=structuredClone(visibleMenu[index].eaten ?? proposedDinners(visibleMenu[index]));
   document.querySelector('#dinnerEditDay').textContent=days[index];
   renderDinnerEditor();
   dinnerEditor.showModal();
@@ -748,7 +777,7 @@ dinnerEditor.addEventListener('close',()=>{dinnerTrigger?.focus();checkCalendar(
 document.querySelector('#dinnerForm').addEventListener('submit',event=>{
   event.preventDefault();
   commitPendingDinnerInputs();
-  state[dinnerIndex].eaten=dinnerDraft;
+  visibleMenu[dinnerIndex].eaten=dinnerDraft;
   refreshDinner(dinnerIndex);
   report('Cena salvata per '+days[dinnerIndex]+'.');
   dinnerEditor.close();
